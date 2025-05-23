@@ -1,0 +1,171 @@
+let equipos = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('../../controllers/equipo.php?op=listar')
+        .then(res => res.json())
+        .then(data => {
+            equipos = data.aaData;
+            initSelects(equipos);
+            renderTablaConDataTable(equipos);
+        });
+
+    ['filtroTipo', 'filtroEstado', 'filtroSede'].forEach(id => {
+        document.getElementById(id).addEventListener('change', () => {
+            $('#tablaEquipos').DataTable().draw();
+        });
+    });
+
+    if (rol_id == 1 || rol_id == 3) {
+        document.getElementById('btnRegistrarEquipo').addEventListener('click', () => {
+            window.open('../../view/NuevoEquipo/index.php', '_blank');
+        });
+    }
+});
+
+function initSelects(data) {
+    const tipos = [...new Set(data.map(e => e[2]))].sort();
+    const filtroTipo = document.getElementById('filtroTipo');
+    tipos.forEach(tipo => {
+        const option = document.createElement('option');
+        option.value = tipo.toLowerCase();
+        option.textContent = tipo;
+        filtroTipo.appendChild(option);
+    });
+
+    const etiquetasEstado = {
+        Activo: 'Activo',
+        Inactivo: 'Inactivo',
+        Baja: 'Dado de Baja'
+    };
+    const estados = [...new Set(data.map(e => e[4]))].sort();
+    const filtroEstado = document.getElementById('filtroEstado');
+    estados.forEach(estado => {
+        const option = document.createElement('option');
+        if (estado.toLowerCase() === 'activo') {
+            option.classList.add('text-success');
+        } else if (estado.toLowerCase() === 'inactivo') {
+            option.classList.add('text-secondary');
+        } else {
+            option.classList.add('text-danger');
+        }
+        option.value = estado.toLowerCase();
+        option.textContent = etiquetasEstado[estado] || estado;
+        filtroEstado.appendChild(option);
+    });
+
+    const sedes = [...new Set(data.map(e => e[0]))].sort();
+    const filtroSede = document.getElementById('filtroSede');
+    sedes.forEach(sede => {
+        const option = document.createElement('option');
+        option.value = sede.toLowerCase();
+        option.textContent = sede;
+        filtroSede.appendChild(option);
+    });
+}
+
+function renderTablaConDataTable(data) {
+    $('#tablaEquipos').DataTable({
+        data: data,
+        destroy: true,
+        columns: [
+            { title: "Sede", data: 0 },
+            { title: "Activo Fijo", data: 1 },
+            { title: "Tipo Equipo", data: 2 },
+            { title: "Serial", data: 3 },
+            {
+                title: "Estado",
+                data: 4,
+                render: (data) => {
+                    switch (data) {
+                        case "Activo": return '<span class="badge bg-success">Activo</span>';
+                        case "Inactivo": return '<span class="badge bg-secondary">Inactivo</span>';
+                        default: return '<span class="badge bg-danger">Dado de Baja</span>';
+                    }
+                }
+            },
+            {
+                title: "Acciones",
+                data: null,
+                orderable: false,
+                searchable: false,
+                render: function (data, type, row) {
+                    const estado = row[4].toLowerCase();
+                    const equipo_id = row[5]; // ID viene como último valor
+
+                    const disabled = estado === 'baja' ? 'disabled' : '';
+
+                    let botones = `
+                        <button onclick="hojaVida('${equipo_id}')" class="btn btn-sm btn-info me-1" title="Información del equipo">
+                            <i class="bi bi-info-circle-fill"></i>
+                        </button>`;
+                        if (estado !== 'baja') {
+                            if(rol_id == 1 || rol_id == 2){
+                            botones += `
+                            <button onclick="registrarMmto('${equipo_id}')" class="btn btn-sm btn-primary" ${disabled} title="${disabled ? 'Equipo dado de baja' : 'Registrar mantenimiento'}">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>`;
+                            }
+
+                            if (rol_id == 1 || rol_id == 3) {
+                                botones += `
+                                <button onclick="actaEntrega('${equipo_id}')" class="btn btn-sm btn-danger" ${disabled} title="${disabled ? 'Equipo dado de baja' : 'Generar acta de entrega'}">
+                                    <i class="bi bi-file-earmark-pdf-fill"></i>
+                                </button>`;
+                            }
+                        }
+                        return botones;
+                }
+            }
+        ],
+        dom: "<'row mb-3'<'col-md-6 d-flex align-items-center'B><'col-md-6'f>>" +
+         "<'row'<'col-12'tr>>" +
+         "<'row mt-3'<'col-md-6'i><'col-md-6'p>>",
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: 'Exportar a Excel',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4]
+                }
+            },
+            {
+                extend: 'pdfHtml5',
+                text: 'Exportar a PDF',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4]
+                }
+            }
+        ],
+        language: {
+            url: "https://cdn.datatables.net/plug-ins/2.3.0/i18n/es-MX.json"
+        },
+        initComplete: function () {
+            $.fn.dataTable.ext.search.push(function (settings, searchData, index, rowData, counter) {
+                const tipoFiltro = document.getElementById('filtroTipo').value.toLowerCase();
+                const estadoFiltro = document.getElementById('filtroEstado').value.toLowerCase();
+                const sedeFiltro = document.getElementById('filtroSede').value.toLowerCase();
+
+                const tipo = rowData[2].toLowerCase();
+                const estado = rowData[4].toLowerCase();
+                const sede = rowData[0].toLowerCase();
+
+                return (!tipoFiltro || tipo === tipoFiltro) &&
+                       (!estadoFiltro || estado === estadoFiltro) &&
+                       (!sedeFiltro || sede === sedeFiltro);
+            });
+        }
+    });
+}
+
+// Funciones para abrir las ventanas
+function hojaVida(equipo_id) {
+    window.open(`../../view/HojaVida/?equipo_id=${equipo_id}`, '_blank');
+}
+
+function registrarMmto(equipo_id) {
+    window.open(`../../view/Mantenimiento/?equipo_id=${equipo_id}`, '_blank');
+}
+
+function actaEntrega(equipo_id) {
+    window.open(`../../controllers/equipo.php?op=acta_entrega_pdf&equipo_id=${equipo_id}`, '_blank');
+}

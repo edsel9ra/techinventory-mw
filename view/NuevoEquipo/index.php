@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <?php require_once "../../public/main/head.php"; ?>
+    <title>Registrar Equipo</title>
+</head>
+
+<body>
+    <?php require_once "../../public/main/nav.php"; ?>
+    <!-- Campos fijos -->
+    <section class="container mt-4">
+        <div class="p-4 bg-white shadow rounded">
+            <form id="form_equipo">
+                <div class="row">
+                    <div class="col">
+                        <h2 class="mb-3">Registro de nuevo equipo en inventario</h2>
+                    </div>
+                    <div class="col-auto d-flex align-items-center gap-1">
+                        <button type="submit" id="btnGuardar" class="btn btn-primary ms-2 me-2 fw-bold d-flex align-items-center gap-2 justify-content-center flex-nowrap">
+                            <span><i class="fa-solid fa-floppy-disk"></i></span>
+                            <span>Guardar</span>
+                        </button>
+                        <button id="btnRegresar" class="btn btn-secondary ms-2 me-2 fw-bold d-flex align-items-center gap-2 justify-content-center flex-nowrap">
+                            <span><i class="fa-solid fa-arrow-left"></i></span>
+                            <span>Regresar</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row g-3 align-items-center">
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <label class="input-group-text fw-bold" for="sede">Sede</label>
+                            <select class="form-select" name="sede" id="sede" required></select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <label class="input-group-text fw-bold" for="tipo_equipo">Tipo de equipo</label>
+                            <select class="form-select" name="tipo_equipo" id="tipo_equipo" required></select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <label class="input-group-text fw-bold" for="af">Código Equipo</label>
+                            <input type="text" class="form-control" name="af" id="af" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3 align-items-center">
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <label class="input-group-text fw-bold" for="marca">Marca</label>
+                            <input type="text" class="form-control" name="marca" id="marca" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <label class="input-group-text fw-bold" for="modelo">Modelo</label>
+                            <input type="text" class="form-control" name="modelo" id="modelo" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <label class="input-group-text fw-bold" for="serial">Serial</label>
+                            <input type="text" class="form-control" name="serial" id="serial" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3 align-items-center">
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <label class="input-group-text fw-bold" for="estado">Estado</label>
+                            <select class="form-select" name="estado" id="estado" required>
+                                <option value="" disabled selected>Seleccione</option>
+                                <option value="Activo">Activo</option>
+                                <option value="Inactivo">Inactivo</option>
+                                <option value="Baja">Dado de Baja</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <label class="input-group-text fw-bold" for="responsable">Responsable</label>
+                            <input type="text" class="form-control" name="responsable" id="responsable" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="container" id="campos_detalles" style="margin-top: 20px;"></div>
+            </form>
+        </div>
+    </section>
+
+    <!-- JS Principal -->
+    <?php require_once "../../public/main/js.php"; ?>
+    <script type="text/javascript" src="nuevoequipo.js"></script>
+
+</body>
+
+</html>
