@@ -1,11 +1,10 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 2) {
-    header('Location: index.php');
+    header('Location: ../index.php');
     exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -18,10 +17,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 2) {
     <?php require_once "../public/main/nav.php"; ?>
     <section class="container mt-4">
         <div class="p-4 bg-white shadow rounded">
-            <!--<h1>Bienvenido Administrador: <?php echo htmlspecialchars($_SESSION['nombre_usr']); ?></h1>
-            <p>Este es tu panel de usuario.</p>
-            <a href="../logout.php" class="btn btn-danger">Cerrar sesión</a>-->
-            <div class="row mt-4 mb-4">
+            <div class="row mt-4 mb-4" id="resumenMntos">
                 <h2 class="text-center">Resumen de Mantenimientos</h2>
                 <div class="col-lg-4 col-6">
                     <div class="small-box text-bg-secondary">
@@ -60,25 +56,34 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 2) {
                     </div>
                 </div>
             </div>
-            <div class="row mt-4 mb-4">
+            <div class="row mt-4 mb-4" id="mntosPorMes">
                 <h2 class="text-center">Mantenimientos por mes</h2>
 
                 <div class="col-12 d-flex flex-column align-items-center">
-                    <!-- Filtro de año -->
-                    <div class="input-group input-group-sm mb-3" style="max-width: 200px;">
-                        <label class="input-group-text fw-bold" for="filtroAnio">Año</label>
-                        <select id="filtroAnio" class="form-select form-select-sm">
-                            <!-- Llenado dinámico -->
-                        </select>
+                    <div class="d-flex justify-content-center gap-2">
+                        <!-- Filtro de año -->
+                        <div class="input-group input-group-sm mb-3" style="width: 135px;">
+                            <label class="input-group-text fw-bold" for="filtroAnio">Año</label>
+                            <select id="filtroAnio" class="form-select form-select-sm">
+                                <!-- Llenado dinámico -->
+                            </select>
+                        </div>
+                        <div class="input-group input-group-sm mb-3" style="width: 170px;">
+                            <label class="input-group-text fw-bold" for="filtroTipoMnto">Tipo</label>
+                            <select id="filtroTipoMnto" class="form-select form-select-sm">
+                                <option value="">Todos</option>
+                                <option value="Preventivo">Preventivo</option>
+                                <option value="Correctivo">Correctivo</option>
+                            </select>
+                        </div>
                     </div>
-
                     <!-- Gráfico más grande -->
                     <div style="width: 100%; max-width: 900px;">
                         <canvas id="graficoMntosPorMes" height="150"></canvas>
+                        <div id="totalMantenimientos" class="text-center mt-3 fw-bold fs-5"></div>
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 

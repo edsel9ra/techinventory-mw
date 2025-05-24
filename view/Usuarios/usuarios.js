@@ -114,18 +114,22 @@ function crearUsuario() {
                     });
                 }
             })
-            .catch(error => Swal.fire('Error', error.message || 'Error al crear usuario', 'error'));
+            .catch(error => {
+                Swal.fire('Error', error.message || 'Error al crear usuario', 'error')
+            });
     });
 }
 
 function abrirModalEdicion(button) {
     const user_id = button.dataset.userId;
     const nombre = button.dataset.nombre;
+    const cargo = button.dataset.cargo;
     const correo = button.dataset.correo;
     const rol_id = button.dataset.rolId;
 
     document.getElementById('edit_user_id').value = user_id;
     document.getElementById('edit_nombre_usr').value = nombre;
+    document.getElementById('edit_cargo_usr').value = cargo;
     document.getElementById('edit_correo_usr').value = correo;
     document.getElementById('edit_passwd_usr').value = ''; // Dejar vacío para que el usuario ingrese una nueva contraseña
 
@@ -173,11 +177,21 @@ document.getElementById('formEditarUsuario').addEventListener('submit', function
 });
 
 function eliminarUsuario(user_id) {
-    if (confirm("¿Estás seguro de eliminar este usuario?")) {
-        fetch("../../controllers/usuario.php?op=eliminar_usuario", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
+    Swal.fire({
+        title: '¿Estás seguro de eliminar este usuario?',
+        text: "¡No podrás revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminarlo',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch("../../controllers/usuario.php?op=eliminar_usuario", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
             },
             body: `user_id=${encodeURIComponent(user_id)}`
         })
@@ -185,7 +199,7 @@ function eliminarUsuario(user_id) {
             .then(data => {
                 if (data.status) {
                     Swal.fire({
-                        icon: 'success',
+                        icon: 'error',
                         title: 'Usuario eliminado correctamente',
                         showConfirmButton: false,
                         timer: 1500,
@@ -201,5 +215,6 @@ function eliminarUsuario(user_id) {
                 }
             })
             .catch(error => Swal.fire('Error', error.message || 'Error al eliminar usuario', 'error'));
-    }
+        }
+    });
 }

@@ -32,7 +32,7 @@ switch ($_GET["op"]) {
             $end = $isAllDay ? substr($row['fecha_fin'], 0, 10) : (new DateTime($row['fecha_fin']))->format('Y-m-d H:i:s');
 
             $data[] = [
-                'id' => $row['id'],
+                'evento_id' => $row['evento_id'],
                 'title' => $row['titulo'],
                 'start' => $start,
                 'end' => $end,
@@ -44,7 +44,6 @@ switch ($_GET["op"]) {
                 ]
             ];
         }
-
         echo json_encode($data);
         break;
 
@@ -105,7 +104,7 @@ switch ($_GET["op"]) {
 
             echo json_encode([
                 "status" => true,
-                "id" => $idInsertado,
+                "evento_id" => $idInsertado,
                 "titulo" => $_POST['titulo'],
                 "fecha_inicio" => $_POST['fecha_inicio'],
                 "fecha_fin" => $_POST['fecha_fin'],
@@ -130,7 +129,7 @@ switch ($_GET["op"]) {
     case 'update':
         verificarRol([1]);
         try {
-            if (!isset($_POST['id']) || empty($_POST['id'])) {
+            if (!isset($_POST['evento_id']) || empty($_POST['evento_id'])) {
                 throw new Exception("❌ ID inválido.");
             }
 
@@ -139,7 +138,7 @@ switch ($_GET["op"]) {
             }
 
             $datos = [];
-            $id = $_POST['id'];
+            $evento_id = $_POST['evento_id'];
 
             if (isset($_POST['titulo']))
                 $datos['titulo'] = $_POST['titulo'];
@@ -177,11 +176,11 @@ switch ($_GET["op"]) {
                 throw new Exception("❌ Fecha de fin debe ser mayor a fecha de inicio.");
             }
 
-            $evento->updateEvento($id, $datos);
+            $evento->updateEvento($evento_id, $datos);
 
             echo json_encode([
                 "status" => true,
-                "id" => $id,
+                "evento_id" => $evento_id,
                 "titulo" => $datos['titulo'],
                 "fecha_inicio" => $datos['fecha_inicio'],
                 "fecha_fin" => $datos['fecha_fin'],
@@ -203,16 +202,16 @@ switch ($_GET["op"]) {
     case 'delete':
         verificarRol([1]);
         try {
-            if (!isset($_POST['id']) || empty($_POST['id'])) {
+            if (!isset($_POST['evento_id']) || empty($_POST['evento_id'])) {
                 throw new Exception("❌ ID inválido.");
             }
 
-            $id = $_POST['id'];
-            $evento->deleteEvento($id);
+            $evento_id = $_POST['evento_id'];
+            $evento->deleteEvento($evento_id);
 
             echo json_encode([
                 "status" => true,
-                "id" => $id,
+                "evento_id" => $evento_id,
                 "message" => "✅ Evento eliminado correctamente"
             ]);
         } catch (Exception $e) {

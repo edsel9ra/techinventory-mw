@@ -4,8 +4,10 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/../config/conexion.php';
 require_once __DIR__ . '/../config/auth.php';
 require_once __DIR__ . '/../models/Equipo.php';
+require_once __DIR__ . '/../models/Usuario.php';
 require_once __DIR__ . '/../public/lib/fpdf/fpdf.php';
 $equipo = new Equipo();
+$usuario = new Usuario();
 
 switch ($_GET["op"]) {
 
@@ -304,6 +306,8 @@ switch ($_GET["op"]) {
                 throw new Exception("❌ No se encontró información del equipo.");
             }
 
+            $usuario_data = $usuario->get_user_id($_SESSION['user_id']);
+
             $formatter = new IntlDateFormatter(
                 'es_CO', // Localización
                 IntlDateFormatter::LONG,
@@ -391,11 +395,11 @@ switch ($_GET["op"]) {
 
             //Nombres
             $pdf->SetFont('Arial', 'B', 12);
-            $pdf->Cell(90, 7, mb_convert_encoding('Edson Ramos', "ISO-8859-1", "UTF-8"), 0, 0, 'C');
-            $pdf->Cell(90, 7, mb_convert_encoding($equipo_data['responsable'], "ISO-8859-1", "UTF-8"), 0, 1, 'C');
+            $pdf->Cell(90, 7, mb_convert_encoding($usuario_data['nombre_usr'], "ISO-8859-1", "UTF-8"), 0, 0, 'C');
+            $pdf->Cell(90, 7, '', 0, 1, 'C');
             //Cargos
             $pdf->SetFont('Arial', 'I', 12);
-            $pdf->Cell(90, 7, mb_convert_encoding('Coordinador de Sistemas', "ISO-8859-1", "UTF-8"), 0, 0, 'C');
+            $pdf->Cell(90, 7, mb_convert_encoding($usuario_data['cargo_usr'], "ISO-8859-1", "UTF-8"), 0, 0, 'C');
             $pdf->Cell(90, 7, '', 0, 1, 'C');
 
             $pdf->Output('I', 'acta_entrega_' . $equipo_data['cod_equipo'] . '.pdf');

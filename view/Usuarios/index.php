@@ -1,11 +1,17 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
-    header('Location: ../../logout.php');
+    switch ($_SESSION['rol_id']) {
+        case 2:
+            header('Location: ../soporte.php');
+            break;
+        case 3:
+            header('Location: ../inventario.php');
+            break;
+    }
     exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -30,6 +36,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
                                 <div class="mb-3">
                                     <label for="nombre" class="form-label">Nombre</label>
                                     <input type="text" class="form-control" id="nombre_usr" name="nombre_usr" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cargo" class="form-label">Cargo</label>
+                                    <input type="text" class="form-control" id="cargo_usr" name="cargo_usr" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="correo" class="form-label">Correo</label>
@@ -86,6 +96,11 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
                             <div class="mb-3">
                                 <label for="nombre" class="form-label">Nombre</label>
                                 <input type="text" class="form-control" id="edit_nombre_usr" name="nombre_usr" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cargo" class="form-label">Cargo</label>
+                                <input type="text" class="form-control" id="edit_cargo_usr" name="cargo_usr"
+                                    required>
                             </div>
                             <div class="mb-3">
                                 <label for="correo" class="form-label">Correo</label>

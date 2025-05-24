@@ -1,4 +1,13 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1 && $_SESSION['rol_id'] != 3) {
+    switch ($_SESSION['rol_id']) {
+        case 2:
+            header('Location: ../soporte.php');
+            break;
+    }
+    exit();
+}
 require_once '../../config/conexion.php';
 require_once '../../models/Equipo.php';
 $equipo = new Equipo();

@@ -3,17 +3,20 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/../config/conexion.php';
 require_once __DIR__ . '/../config/auth.php';
 require_once __DIR__ . '/../models/Mantenimiento.php';
+require_once __DIR__ . '/../models/Usuario.php';
 $mantenimiento = new Mantenimiento();
+$usuario = new Usuario();
 
 switch ($_GET["op"]) {
     case 'insert':
         verificarRol([1, 2]);
         try {
+            $usuario_data = $usuario->get_user_id($_SESSION['user_id']);
             $data = [
                 'equipo_id' => $_POST['equipo_id'],
                 'tipo_mantenimiento' => $_POST['tipo_mantenimiento'],
                 'fecha_realizado' => $_POST['fecha_realizado'],
-                'tecnico' => $_POST['tecnico'],
+                'tecnico' => $usuario_data['nombre_usr'],
                 'descripcion' => $_POST['descripcion'],
                 'acciones_realizadas' => $_POST['acciones_realizadas'],
                 'observaciones' => $_POST['observaciones'],
@@ -89,7 +92,7 @@ switch ($_GET["op"]) {
 
     case 'get_mmto_id':
         verificarRol([1, 2]);
-        $mmto_id = $_GET['mmto_id'];
+        $mmto_id = $_GET['mantenimiento_id'];
         $resultado = $mantenimiento->getMmtoId($mmto_id);
         echo json_encode($resultado);
         break;
@@ -130,7 +133,8 @@ switch ($_GET["op"]) {
     case 'mantenimientos_por_mes':
         verificarRol([1, 2]);
         $anio = isset($_GET['anio']) ? intval($_GET['anio']) : date('Y');
-        $resultado = $mantenimiento->mantenimientosPorMes($anio);
+        $tipo = $_GET['tipo'] ?? null;
+        $resultado = $mantenimiento->mantenimientosPorMes($anio, $tipo);
         echo json_encode([
             'status' => true,
             'data' => $resultado

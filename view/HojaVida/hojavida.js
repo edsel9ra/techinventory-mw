@@ -227,12 +227,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         const isFirst = index === 0 ? 'show' : ''; // Mostrar el primer mantenimiento expandido
                         const mmtoHtml = `
                             <div class="accordion-item">
-                                <h2 class="accordion-header" id="heading${mmto.mmto_id}">
-                                    <button class="accordion-button ${isFirst ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${mmto.mmto_id}" aria-expanded="${isFirst ? 'true' : 'false'}" aria-controls="collapse${mmto.mmto_id}">
+                                <h2 class="accordion-header" id="heading${mmto.mantenimiento_id}">
+                                    <button class="accordion-button ${isFirst ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${mmto.mantenimiento_id}" aria-expanded="${isFirst ? 'true' : 'false'}" aria-controls="collapse${mmto.mantenimiento_id}">
                                         Mantenimiento Realizado (Fecha): ${mmto.fecha_realizado}
                                     </button>
                                 </h2>
-                                <div id="collapse${mmto.mmto_id}" class="accordion-collapse collapse ${isFirst}" aria-labelledby="heading${mmto.mmto_id}" data-bs-parent="#historialMmtos">
+                                <div id="collapse${mmto.mantenimiento_id}" class="accordion-collapse collapse ${isFirst}" aria-labelledby="heading${mmto.mantenimiento_id}" data-bs-parent="#historialMmtos">
                                     <div class="accordion-body">
                                         <ul class="list-group">
                                             <li class="list-group-item"><strong>Tipo de Mantenimiento:</strong> ${mmto.tipo}</li>

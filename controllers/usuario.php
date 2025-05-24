@@ -50,11 +50,13 @@ switch ($_GET["op"]) {
         verificarRol([1]);
         try {
             $nombre_usr = $_POST['nombre_usr'] ?? null;
+            $cargo_usr = $_POST['cargo_usr'] ?? null;
             $correo_usr = $_POST['correo_usr'] ?? null;
             $passwd_usr = $_POST['passwd_usr'] ?? null;
             $rol_id = $_POST['rol_id'] ?? null;
             $usuario->crearUser(
                 $nombre_usr,
+                $cargo_usr,
                 $correo_usr,
                 $passwd_usr,
                 $rol_id
@@ -82,6 +84,7 @@ switch ($_GET["op"]) {
                 <button type="button" class="btn btn-primary btn-sm btn-editar"
                     data-user-id="' . (int) $row["user_id"] . '"
                     data-nombre="' . htmlspecialchars($row["nombre_usr"], ENT_QUOTES) . '"
+                    data-cargo="' . htmlspecialchars($row["cargo_usr"], ENT_QUOTES) . '"
                     data-correo="' . htmlspecialchars($row["correo_usr"], ENT_QUOTES) . '"
                     data-passwd="' . htmlspecialchars($row["passwd_usr"], ENT_QUOTES) . '"
                     data-rol-id="' . (int) $row["rol_id"] . '">
@@ -182,6 +185,9 @@ switch ($_GET["op"]) {
             $camposActualizar = [];
             if (isset($_POST['nombre_usr'])) {
                 $camposActualizar['nombre_usr'] = $_POST['nombre_usr'];
+            }
+            if(isset($_POST['cargo_usr'])){
+                $camposActualizar['cargo_usr'] = $_POST['cargo_usr'];
             }
             if (isset($_POST['correo_usr'])) {
                 $camposActualizar['correo_usr'] = $_POST['correo_usr'];

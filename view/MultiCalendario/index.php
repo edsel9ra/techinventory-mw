@@ -1,3 +1,14 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1 && $_SESSION['rol_id'] != 2) {
+    switch ($_SESSION['rol_id']) {
+        case 3:
+            header('Location: ../inventario.php');
+            break;
+    }
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>

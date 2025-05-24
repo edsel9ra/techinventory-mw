@@ -1,3 +1,17 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
+    switch ($_SESSION['rol_id']) {
+        case 2:
+            header('Location: ../soporte.php');
+            break;
+        case 3:
+            header('Location: ../inventario.php');
+            break;
+    }
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -14,13 +28,13 @@
                 <div class="col">
                     <h2 class="mb-3">Calendario</h2>
                 </div>
-                <div class="col-auto d-flex align-items-center gap-1">
+                <!--<div class="col-auto d-flex align-items-center gap-1">
                     <button id="btnRegresar"
                         class="btn btn-secondary ms-2 me-2 fw-bold d-flex align-items-center gap-2 justify-content-center flex-nowrap">
                         <span><i class="fa-solid fa-arrow-left"></i></span>
                         <span>Regresar</span>
                     </button>
-                </div>
+                </div>-->
             </div>
             <div class="row g-3">
                 <!-- Columna para eventos externos -->
@@ -65,7 +79,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="formEvento">
-                        <input type="hidden" id="id" name="id">
+                        <input type="hidden" id="evento_id" name="evento_id">
                         <div class="mb-3">
                             <label for="titulo" class="form-label">Título</label>
                             <input type="text" class="form-control" id="titulo" name="titulo" required>
@@ -111,6 +125,9 @@
     <!-- JS -->
     <?php require_once __DIR__ . '/../../public/main/js.php'; ?>
     <script src="calendario.js"></script>
+    <script>
+        const rol_id = <?php echo $_SESSION['rol_id']; ?>;
+    </script>
 </body>
 
 </html>

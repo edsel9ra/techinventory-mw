@@ -1,34 +1,55 @@
 document.addEventListener('DOMContentLoaded', function () {
     const selectAnio = document.getElementById('filtroAnio');
+    const tipoSelect = document.getElementById('filtroTipoMnto');
+    const filtrosContainer = document.getElementById('filtrosMntos');
     const anioActual = new Date().getFullYear();
-    
+
     // Generar opciones para los últimos 5 años
-    for(let i = 0; i < 5; i++) {
-        const anio = anioActual - i;
-        const option = document.createElement('option');
-        option.value = anio;
-        option.textContent = anio;
-        if (anio === anioActual) option.selected = true;
-        selectAnio.appendChild(option);
+    if (rol_id === 1 || rol_id === 2) {
+        for (let i = 0; i < 5; i++) {
+            const anio = anioActual - i;
+            const option = document.createElement('option');
+            option.value = anio;
+            option.textContent = anio;
+            if (anio === anioActual) option.selected = true;
+            selectAnio.appendChild(option);
+        }
+
+        // Eventos de cambio
+        selectAnio.addEventListener('change', actualizarGrafico);
+        tipoSelect.addEventListener('change', actualizarGrafico);
+
+        // Graficar inicialmente
+        graficarMntosPorMes(anioActual, tipoSelect.value);
+    } else {
+        // Ocultar filtros si no tiene permisos
+        if (filtrosContainer) {
+            filtrosContainer.style.display = 'none';
+        }
     }
 
-    contarEquiposTotal();
-    contarEquiposActivos();
-    contarEquiposInactivos();
-    contarEquiposBaja();
-    graficarEquiposPorTipoActivos();
-    graficarEquiposPorTipoInactivos();
-    graficarEquiposPorTipoBaja();
-    graficarEquiposPorSedeActivos();
-    contarMntosTotal();
-    contarMntosPreventivos();
-    contarMntosCorrectivos();
-    graficarMntosPorMes(anioActual);
+    if (rol_id === 1 || rol_id === 2) {
+        contarMntosTotal();
+        contarMntosPreventivos();
+        contarMntosCorrectivos();
+    }
 
-    selectAnio.addEventListener('change', () => {
-        const anioSeleccionado = selectAnio.value;
-        graficarMntosPorMes(anioSeleccionado);
-    });
+    if (rol_id === 1 || rol_id === 3) {
+        contarEquiposTotal();
+        contarEquiposActivos();
+        contarEquiposInactivos();
+        contarEquiposBaja();
+        graficarEquiposPorTipoActivos();
+        graficarEquiposPorTipoInactivos();
+        graficarEquiposPorTipoBaja();
+        graficarEquiposPorSedeActivos();
+    }
+
+    function actualizarGrafico() {
+        const anio = selectAnio.value;
+        const tipo = tipoSelect.value;
+        graficarMntosPorMes(anio, tipo);
+    }
 });
 
 //Funciones para Equipos
@@ -287,8 +308,10 @@ function contarMntosCorrectivos() {
         })
 }
 
-function graficarMntosPorMes(anio) {
-    fetch(`../controllers/mantenimiento.php?op=mantenimientos_por_mes&anio=${anio}`)
+function graficarMntosPorMes(anio, tipo = '') {
+    const url = `../controllers/mantenimiento.php?op=mantenimientos_por_mes&anio=${anio}&tipo=${tipo}`;
+
+    fetch(url)
         .then(response => response.json())
         .then(data => {
             if (data.status) {
@@ -296,11 +319,21 @@ function graficarMntosPorMes(anio) {
                     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
                 const datosMeses = new Array(12).fill(0);
+                let total = 0;
+
                 data.data.forEach(item => {
-                    datosMeses[item.mes - 1] = item.total_mantenimientos;
+                    const index = item.mes - 1;
+                    datosMeses[index] = item.total_mantenimientos;
+                    total += parseInt(item.total_mantenimientos);
                 });
 
-                // Destruir gráfico anterior si ya existe
+                // Mostrar total acumulado
+                const totalText = tipo 
+                    ? `Total de mantenimientos ${tipo.toLowerCase()}s en ${anio}: ${total}`
+                    : `Total de mantenimientos en ${anio}: ${total}`;
+                document.getElementById('totalMantenimientos').textContent = totalText;
+
+                // Destruir gráfico anterior si existe
                 if (window.graficoMntosPorMes instanceof Chart) {
                     window.graficoMntosPorMes.destroy();
                 }
@@ -311,7 +344,7 @@ function graficarMntosPorMes(anio) {
                     data: {
                         labels: mesesNombres,
                         datasets: [{
-                            label: `Mantenimientos por mes (${anio})`,
+                            label: `Mantenimientos por mes (${anio}) ${tipo ? '- ' + tipo : ''}`,
                             data: datosMeses,
                             borderWidth: 1,
                             borderColor: 'rgba(75, 192, 192, 1)',

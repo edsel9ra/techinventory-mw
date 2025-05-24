@@ -101,12 +101,17 @@ class Mantenimiento extends Conectar
         }
     }*/
 
-    public function mantenimientosPorMes($anio)
+    public function mantenimientosPorMes($anio, $tipo = null)
     {
         try {
             $conectar = parent::conexion();
-            $stmt = $conectar->prepare("SELECT MONTH(fecha_realizado) AS mes, COUNT(*) AS total_mantenimientos FROM tbl_mantenimientos WHERE YEAR(fecha_realizado) = ? GROUP BY mes");
-            $stmt->execute([$anio]);
+            if ($tipo) {
+                $stmt = $conectar->prepare("SELECT MONTH(fecha_realizado) AS mes, COUNT(*) AS total_mantenimientos FROM tbl_mantenimientos WHERE YEAR(fecha_realizado) = ? AND tipo = ? GROUP BY mes");
+                $stmt->execute([$anio, $tipo]);
+            } else {
+                $stmt = $conectar->prepare("SELECT MONTH(fecha_realizado) AS mes, COUNT(*) AS total_mantenimientos FROM tbl_mantenimientos WHERE YEAR(fecha_realizado) = ? GROUP BY mes");
+                $stmt->execute([$anio]);
+            }
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
             throw new Exception("Error al obtener los mantenimientos por mes: " . $e->getMessage());

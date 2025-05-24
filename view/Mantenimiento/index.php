@@ -1,3 +1,14 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1 && $_SESSION['rol_id'] != 2) {
+    switch ($_SESSION['rol_id']) {
+        case 3:
+            header('Location: ../inventario.php');
+            break;
+    }
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -20,13 +31,15 @@
                         <div class="col">
                             <div class="input-group mb-3">
                                 <label class="input-group-text fw-bold" for="fecha_realizado">FECHA:</label>
-                                <input type="date" class="form-control" id="fecha_realizado" name="fecha_realizado" required>
+                                <input type="date" class="form-control" id="fecha_realizado" name="fecha_realizado"
+                                    required>
                             </div>
                         </div>
                         <div class="col">
                             <div class="input-group mb-3">
                                 <label class="input-group-text fw-bold" for="nombre_equipo">EQUIPO A INTERVENIR:</label>
-                                <input type="text" class="form-control bg-light" id="nombre_equipo" name="nombre_equipo" readonly>
+                                <input type="text" class="form-control bg-light" id="nombre_equipo" name="nombre_equipo"
+                                    readonly>
                             </div>
                         </div>
                     </div>
@@ -40,7 +53,8 @@
                         <div class="col">
                             <div class="input-group mb-3">
                                 <label class="input-group-text fw-bold" for="cod_equipo">CÓDIGO:</label>
-                                <input type="text" class="form-control bg-light" id="cod_equipo" name="cod_equipo" readonly>
+                                <input type="text" class="form-control bg-light" id="cod_equipo" name="cod_equipo"
+                                    readonly>
                             </div>
                         </div>
                     </div>
@@ -53,7 +67,9 @@
                         <div class="col d-grid gap-1 col-4 mx-auto">
                             <input type="radio" class="btn-check" name="tipo_mantenimiento" id="preventivo"
                                 value="Preventivo" autocomplete="off" required>
-                            <label class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2 justify-content-center flex-nowrap" for="preventivo">
+                            <label
+                                class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2 justify-content-center flex-nowrap"
+                                for="preventivo">
                                 <span><i class="fa-solid fa-calendar-check"></i></span>
                                 <span>PREVENTIVO</span>
                             </label>
@@ -61,7 +77,9 @@
                         <div class="col d-grid gap-1 col-4 mx-auto">
                             <input type="radio" class="btn-check" name="tipo_mantenimiento" id="correctivo"
                                 value="Correctivo" autocomplete="off" required>
-                            <label class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2 justify-content-center flex-nowrap" for="correctivo">
+                            <label
+                                class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2 justify-content-center flex-nowrap"
+                                for="correctivo">
                                 <span><i class="fa-solid fa-wrench"></i></span>
                                 <span>CORRECTIVO</span>
                             </label>
@@ -104,7 +122,8 @@
                     <!-- Involucrados // Puede ser una grilla -->
                     <div class="row">
                         <div class="col text-center">
-                            <input type="text" class="form-control" id="tecnico" name="tecnico" required>
+                            <input type="text" class="form-control bg-light" id="tecnico" name="tecnico"
+                                value="<?php echo htmlspecialchars($_SESSION['nombre_usr'] ?? ''); ?>" readonly>
                             <label for="tecnico" class="form-label fw-bold">RESPONSABLE DEL MANTENIMIENTO</label>
                         </div>
                         <div class="col text-center">
@@ -115,11 +134,13 @@
                     <hr>
                     <!-- Botones de Acción -->
                     <div class="text-center d-flex align-items-center gap-1 justify-content-center flex-nowrap">
-                        <button type="submit" class="btn btn-success d-flex align-items-center gap-2 justify-content-center flex-nowrap">
+                        <button type="submit"
+                            class="btn btn-success d-flex align-items-center gap-2 justify-content-center flex-nowrap">
                             <span><i class="fa-regular fa-pen-to-square"></i></span>
                             <span>Registrar Mantenimiento</span>
                         </button>
-                        <button id="btnRegresar" class="btn btn-secondary d-flex align-items-center gap-2 justify-content-center flex-nowrap">
+                        <button id="btnRegresar"
+                            class="btn btn-secondary d-flex align-items-center gap-2 justify-content-center flex-nowrap">
                             <span><i class="fa-solid fa-arrow-left"></i></span>
                             <span>Regresar al Listado</span>
                         </button>

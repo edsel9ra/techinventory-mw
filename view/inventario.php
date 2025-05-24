@@ -1,11 +1,10 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 3) {
-    header('Location: index.php');
+    header('Location: ../index.php');
     exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -19,11 +18,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 3) {
     <?php require_once "../public/main/nav.php"; ?>
     <section class="container mt-4">
         <div class="p-4 bg-white shadow rounded">
-            <!--<h1>Bienvenido Administrador: <?php echo htmlspecialchars($_SESSION['nombre_usr']); ?></h1>
-            <p>Este es tu panel de usuario.</p>
-            <a href="../logout.php" class="btn btn-danger">Cerrar sesión</a>-->
-
-            <div class="row mb-4 mt-4">
+        <div class="row mb-4 mt-4" id="resumen">
                 <h2 class="text-center">Resumen</h2>
                 <div class="col-lg-3 col-6">
                     <div class="small-box text-bg-secondary">
@@ -74,7 +69,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 3) {
                     </div>
                 </div>
             </div>
-            <div class="row mt-4 mb-4">
+            <div class="row mt-4 mb-4" id="equiposPorTipo">
                 <h2 class="text-center">Equipos por tipo</h2>
                 <div class="col-lg-4 col-6 d-flex justify-content-center">
                     <canvas id="graficoEquiposTipoActivos" width="400" height="250"></canvas>
@@ -86,29 +81,11 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 3) {
                     <canvas id="graficoEquiposTipoBaja" width="400" height="250"></canvas>
                 </div>
             </div>
-            <div class="row mt-4 mb-4">
+            <div class="row mt-4 mb-4" id="equiposPorSede">
                 <h2 class="text-center">Equipos activos por sede</h2>
                 <div class="col-12 d-flex flex-column align-items-center">
                     <div style="width: 100%; max-width: 500px;">
                         <canvas id="graficoEquiposSedeActivos" height="90"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-4 mb-4">
-                <h2 class="text-center">Mantenimientos por mes</h2>
-
-                <div class="col-12 d-flex flex-column align-items-center">
-                    <!-- Filtro de año -->
-                    <div class="input-group input-group-sm mb-3" style="max-width: 200px;">
-                        <label class="input-group-text fw-bold" for="filtroAnio">Año</label>
-                        <select id="filtroAnio" class="form-select form-select-sm">
-                            <!-- Llenado dinámico -->
-                        </select>
-                    </div>
-
-                    <!-- Gráfico más grande -->
-                    <div style="width: 100%; max-width: 900px;">
-                        <canvas id="graficoMntosPorMes" height="150"></canvas>
                     </div>
                 </div>
             </div>

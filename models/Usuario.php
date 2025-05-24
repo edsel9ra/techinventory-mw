@@ -54,11 +54,11 @@ class Usuario extends Conectar
         }
     }
 
-    public function crearUser($nombre_usr, $correo_usr, $passwd_usr, $rol_id)
+    public function crearUser($nombre_usr, $cargo_usr, $correo_usr, $passwd_usr, $rol_id)
     {
         $conectar = parent::conexion();
         try {
-            if (empty($nombre_usr) || empty($correo_usr) || empty($passwd_usr) || empty($rol_id)) {
+            if (empty($nombre_usr) || empty($cargo_usr) || empty($correo_usr) || empty($passwd_usr) || empty($rol_id)) {
                 throw new Exception("Todos los campos son obligatorios.");
             }
 
@@ -72,8 +72,8 @@ class Usuario extends Conectar
             //
             $conectar->beginTransaction();
             $hash = password_hash($passwd_usr, PASSWORD_DEFAULT);
-            $stmt = $conectar->prepare("INSERT INTO tbl_usuarios (nombre_usr, correo_usr, passwd_usr, rol_id) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$nombre_usr, $correo_usr, $hash, $rol_id]);
+            $stmt = $conectar->prepare("INSERT INTO tbl_usuarios (nombre_usr, cargo_usr, correo_usr, passwd_usr, rol_id) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$nombre_usr, $cargo_usr, $correo_usr, $hash, $rol_id]);
             $conectar->commit();
             return true;
         } catch (PDOException $e) {

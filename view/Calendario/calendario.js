@@ -114,10 +114,10 @@ document.addEventListener('DOMContentLoaded', function () {
       method: 'GET',
       failure: function () {
         alertaError('Error al cargar los eventos');
-      },
+      }/*,
       success: function (data) {
         console.log(data);
-      }
+      }*/
     },
     //Función para arrastrar y crear eventos
     drop: function (info) {
@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
       info.el.style.cursor = 'pointer';
       const event = info.event;
 
-      document.getElementById('id').value = event.id;
+      document.getElementById('evento_id').value = event.id;
       document.getElementById('titulo').value = event.title;
       document.getElementById('descripcion').value = event.extendedProps.descripcion || '';
       document.getElementById('fecha_inicio').value = event.allDay ? formatDateOnly(event.start) : formatDateTimeLocal(event.start);
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function guardarEvento() {
     const form = document.getElementById('formEvento');
     const formData = new FormData(form);
-    const idEvento = document.getElementById('id').value;
+    const idEvento = document.getElementById('evento_id').value;
     const btnGuardarEvento = document.getElementById('btnGuardarEvento');
 
     const titulo = formData.get('titulo')?.trim();
@@ -408,7 +408,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('btnGuardarEvento').addEventListener('click', guardarEvento);
 
   document.getElementById('btnEliminarEvento').addEventListener('click', () => {
-    const idEvento = document.getElementById('id').value;
+    const idEvento = document.getElementById('evento_id').value;
     if (!idEvento) {
       alertaError('No se ha seleccionado ningún evento para eliminar.');
       return;

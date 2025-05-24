@@ -1,3 +1,13 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1 && $_SESSION['rol_id'] != 3) {
+    switch ($_SESSION['rol_id']) {
+        case 2:
+            header('Location: ../soporte.php');
+            break;
+    }
+    exit();
+}?>
 <!DOCTYPE html>
 <html lang="es">
 

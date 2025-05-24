@@ -19,6 +19,7 @@ CREATE TABLE tbl_roles (
 CREATE TABLE tbl_usuarios (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     nombre_usr VARCHAR(100) NOT NULL,
+    cargo_usr VARCHAR(100) NOT NULL,
     correo_usr VARCHAR(100) NOT NULL,
     passwd_usr VARCHAR(255) NOT NULL,
     rol_id INT NOT NULL,
@@ -84,15 +85,13 @@ CREATE TABLE tbl_mantenimientos (
     equipo_id INT NOT NULL,
     tipo ENUM('Preventivo', 'Correctivo') NOT NULL,
     fecha_realizado DATE NOT NULL,
-    /*tecnico_id INT NOT NULL, (Implementar porteriormente al subir plataforma)*/
     tecnico VARCHAR(100),
     descripcion TEXT,
     acciones_realizadas TEXT,
     observaciones TEXT,
     revisado_por VARCHAR(100),
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (equipo_id) REFERENCES tbl_equipos(equipo_id)/*,
-    FOREIGN KEY (tecnico_id) REFERENCES tbl_usuarios(id)*/
+    FOREIGN KEY (equipo_id) REFERENCES tbl_equipos(equipo_id)
 );
 
 CREATE TABLE tbl_eventos_calendario (
@@ -112,16 +111,3 @@ CREATE TABLE tbl_eventos_calendario (
 
     FOREIGN KEY (sede_id) REFERENCES tbl_sedes(sede_id)
 );
-
-/*ALTER TABLE tbl_equipos
-ADD CONSTRAINT fk_detalle_equipo
-FOREIGN KEY (detalle_equipo_id) REFERENCES tbl_monitores(monitor_id)
-ON DELETE SET NULL;
-
-ALTER TABLE tbl_computadores
-ADD CONSTRAINT fk_monitor_computador
-FOREIGN KEY (monitor_id) REFERENCES tbl_monitores(monitor_id)
-ON DELETE SET NULL;
-
-ALTER TABLE tbl_monitores
-ADD CONSTRAINT uq_monitor_asignado UNIQUE (monitor_id, asignado);*/
