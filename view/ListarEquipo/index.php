@@ -18,7 +18,7 @@ if (!isset($_SESSION['user_id'])) {
     <section class="container mt-4">
         <div class="p-4 bg-white shadow rounded">
             <div class="row">
-                <div class="col">
+                <div class="col d-flex align-items-center justify-content-center">
                     <h2 class="mb-3">Listado de Equipos Tecnológicos</h2>
                 </div>
                 <div class="col-auto">
@@ -53,6 +53,11 @@ if (!isset($_SESSION['user_id'])) {
                             <option value="">Todos</option>
                         </select>
                     </div>
+                </div>
+                <div class="col-auto">
+                    <button id="btnLimpiarFiltros" class="btn btn-outline-secondary btn-sm ms-2" style="display: none;">
+                        Limpiar filtros
+                    </button>
                 </div>
             </div>
 

@@ -11,6 +11,7 @@ $usuario = new Usuario();
 
 switch ($_GET["op"]) {
 
+    //Combo tipo equipo
     case "combo_tipo_equipo":
         verificarRol([1, 3]);
         try {
@@ -35,6 +36,7 @@ switch ($_GET["op"]) {
         }
         break;
 
+    //Insertar equipo
     case 'insert':
         verificarRol([1, 3]);
         try {
@@ -103,7 +105,8 @@ switch ($_GET["op"]) {
         }
         break;
 
-        case 'combo_monitor':
+    //Combo monitor
+    case 'combo_monitor':
         verificarRol([1, 3]);
         try {
             $sede_id = $_GET['sede_id'] ?? null;
@@ -128,7 +131,7 @@ switch ($_GET["op"]) {
         }
         break;
 
-    // Combo Monitor Edit
+    //Combo Monitor Edit
     case 'combo_monitor_edit':
         verificarRol([1, 3]);
         try {
@@ -140,7 +143,7 @@ switch ($_GET["op"]) {
         }
         break;
 
-    // Listar Equipos
+    //Listar Equipos
     case 'listar':
         verificarRol([1, 2, 3]);
         $datos = $equipo->listarEquipos();
@@ -168,7 +171,7 @@ switch ($_GET["op"]) {
         echo json_encode($results);
         break;
 
-    // Listar Detalle de Equipo
+    //Listar Detalle de Equipo
     case 'listar_detalle':
         verificarRol([1, 2, 3]);
         try {
@@ -189,7 +192,7 @@ switch ($_GET["op"]) {
         }
         break;
 
-    // Obtener Equipo para Editar
+    //Obtener Equipo para Editar
     case 'get_equipo_edit':
         verificarRol([1, 3]);
         try {
@@ -215,7 +218,7 @@ switch ($_GET["op"]) {
         }
         break;
 
-    // Actualizar Equipo
+    //Actualizar Equipo
     case 'update':
         verificarRol([1, 3]);
         try {
@@ -271,7 +274,7 @@ switch ($_GET["op"]) {
         }
         break;
 
-    // Generar Código de Equipo
+    //Generar Código de Equipo
     case 'generar_codigo_equipo':
         verificarRol([1, 3]);
         try {
@@ -292,7 +295,7 @@ switch ($_GET["op"]) {
         }
         break;
 
-    // Acta de Entrega
+    //Acta de Entrega
     case 'acta_entrega_pdf':
         verificarRol([1, 3]);
         try {
@@ -417,6 +420,7 @@ switch ($_GET["op"]) {
         }
         break;
 
+    //Contar equipos
     case 'contar_equipos_total':
         verificarRol([1, 3]);
         try {
@@ -536,6 +540,114 @@ switch ($_GET["op"]) {
             echo json_encode([
                 'status' => true,
                 'data' => $resultado
+            ]);
+        } catch (Exception $e) {
+            echo json_encode([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+        break;
+
+    //Subir imágenes
+    case 'subir_imagen_equipo':
+        verificarRol([1, 3]);
+        try {
+            //Recibir archivos
+            $archivos = $_FILES['imagenes'] ?? [];
+            $maxSize = 5 * 1024 * 1024;
+            $mimePermitidos = ['image/jpeg', 'image/png', 'image/jpg', 'image/bmp', 'image/webp'];
+            $extensionesPermitidas = ['jpeg', 'jpg', 'png', 'bmp', 'webp'];
+            //Contador de archivos guardados
+            $guardadas = 0;
+
+            //Recibir datos
+            $equipo_id = $_POST['equipo_id'] ?? null;
+            $cod_equipo = $_POST['cod_equipo'] ?? null;
+            $descripcion = $_POST['descripcion'] ?? null;
+
+            // Validar que se haya seleccionado un equipo y su código
+            if (!$equipo_id || !$cod_equipo) {
+                throw new Exception("❌ No se encontró el equipo con ID $equipo_id");
+            }
+
+            //Recorrer archivos
+            for ($i = 0; $i < count($archivos['name']); $i++) {
+                if ($archivos['error'][$i] !== UPLOAD_ERR_OK)
+                    continue;
+
+                $nombreOriginal = $archivos['name'][$i];
+                $tmpName = $archivos['tmp_name'][$i];
+                $size = $archivos['size'][$i];
+
+                if ($size > $maxSize)
+                    continue;
+
+                $mime = mime_content_type($tmpName);
+                $ext = strtolower(pathinfo($nombreOriginal, PATHINFO_EXTENSION));
+                if (!in_array($mime, $mimePermitidos) || !in_array($ext, $extensionesPermitidas))
+                    continue;
+
+                $nombreSanitizado = uniqid() . '_' . preg_replace('/[^a-zA-Z0-9_\-\.]/', '_', $nombreOriginal); // limpia caracteres raros
+
+                $directorio = __DIR__ . '/../public/uploads/gallery/' . $cod_equipo;
+                if (!is_dir($directorio))
+                    mkdir($directorio, 0775, true);
+
+                $rutaRelativa = "/public/uploads/gallery/$cod_equipo/$nombreSanitizado";
+                $rutaDestino = "$directorio/$nombreSanitizado";
+
+                if (move_uploaded_file($tmpName, $rutaDestino)) {
+                    $equipo->insertImagenEquipo($equipo_id, $rutaRelativa, $descripcion);
+                    $guardadas++;
+                }
+            }
+
+            echo json_encode([
+                'status' => $guardadas > 0,
+                'message' => $guardadas > 0 ? "$guardadas Imágenes subidas correctamente" : '❌ No se subieron imágenes',
+                'data' => $equipo_id
+            ]);
+
+        } catch (Exception $e) {
+            echo json_encode([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+        break;
+
+    case 'listar_imagenes_equipo':
+        verificarRol([1, 2, 3]);
+        try {
+            $equipo_id = $_GET['equipo_id'] ?? null;
+            if (empty($equipo_id)) {
+                throw new Exception("❌ El ID del equipo no puede estar vacío.");
+            }
+            $imagenes = $equipo->get_imagenes_equipo($equipo_id);
+            echo json_encode([
+                'status' => true,
+                'data' => $imagenes
+            ]);
+        } catch (Exception $e) {
+            echo json_encode([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+        break;
+
+    case 'eliminar_imagen_equipo':
+        verificarRol([1, 3]);
+        try {
+            $imagen_id = $_GET['imagen_id'] ?? null;
+            if (!$imagen_id) {
+                throw new Exception("❌ ID de la imagen no proporcionado");
+            }
+            $equipo->deleteImagenEquipo($imagen_id);
+            echo json_encode([
+                'status' => true,
+                'message' => '✅ Imagen eliminada correctamente'
             ]);
         } catch (Exception $e) {
             echo json_encode([

@@ -39,3 +39,9 @@ require_once __DIR__ . '/../../autoload.php';
 
 <!-- Tippy -->
 <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/scale.css"/>
+
+<!-- Magnific Popup -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css">
+
+<!-- Lightbox -->
+<link href="https://cdn.jsdelivr.net/npm/lightbox2@2/dist/css/lightbox.min.css" rel="stylesheet">

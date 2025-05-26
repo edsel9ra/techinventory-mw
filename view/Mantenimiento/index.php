@@ -120,13 +120,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1 && $_SESSION['rol_i
                         </div>
                     </div>
                     <!-- Involucrados // Puede ser una grilla -->
-                    <div class="row">
-                        <div class="col text-center">
+                    <div class="row text-center d-flex align-items-center gap-1 justify-content-center flex-nowrap">
+                        <div class="col-4 text-center">
                             <input type="text" class="form-control bg-light" id="tecnico" name="tecnico"
                                 value="<?php echo htmlspecialchars($_SESSION['nombre_usr'] ?? ''); ?>" readonly>
                             <label for="tecnico" class="form-label fw-bold">RESPONSABLE DEL MANTENIMIENTO</label>
                         </div>
-                        <div class="col text-center">
+                        <div class="col-4 text-center">
                             <input type="text" class="form-control" id="revisado_por" name="revisado_por" required>
                             <label for="revisado_por" class="form-label fw-bold">QUIEN RECIBE EL EQUIPO</label>
                         </div>

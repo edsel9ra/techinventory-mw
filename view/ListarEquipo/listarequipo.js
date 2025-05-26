@@ -1,17 +1,21 @@
 let equipos = [];
 
 document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const estadoParam = params.get('estado')?.toLowerCase() || '';
+    
     fetch('../../controllers/equipo.php?op=listar')
         .then(res => res.json())
         .then(data => {
             equipos = data.aaData;
             initSelects(equipos);
-            renderTablaConDataTable(equipos);
+            renderTablaConDataTable(equipos, estadoParam);
         });
 
     ['filtroTipo', 'filtroEstado', 'filtroSede'].forEach(id => {
         document.getElementById(id).addEventListener('change', () => {
             $('#tablaEquipos').DataTable().draw();
+            verificarFiltrosActivos();
         });
     });
 
@@ -63,8 +67,8 @@ function initSelects(data) {
     });
 }
 
-function renderTablaConDataTable(data) {
-    $('#tablaEquipos').DataTable({
+function renderTablaConDataTable(data, estadoInicial='') {
+    const table = $('#tablaEquipos').DataTable({
         data: data,
         destroy: true,
         columns: [
@@ -140,6 +144,9 @@ function renderTablaConDataTable(data) {
             url: "https://cdn.datatables.net/plug-ins/2.3.0/i18n/es-MX.json"
         },
         initComplete: function () {
+            if (estadoInicial) {
+                document.getElementById('filtroEstado').value = estadoInicial;
+            }
             $.fn.dataTable.ext.search.push(function (settings, searchData, index, rowData, counter) {
                 const tipoFiltro = document.getElementById('filtroTipo').value.toLowerCase();
                 const estadoFiltro = document.getElementById('filtroEstado').value.toLowerCase();
@@ -153,6 +160,8 @@ function renderTablaConDataTable(data) {
                        (!estadoFiltro || estado === estadoFiltro) &&
                        (!sedeFiltro || sede === sedeFiltro);
             });
+            table.draw();
+            verificarFiltrosActivos();
         }
     });
 }
@@ -168,4 +177,33 @@ function registrarMmto(equipo_id) {
 
 function actaEntrega(equipo_id) {
     window.open(`../../controllers/equipo.php?op=acta_entrega_pdf&equipo_id=${equipo_id}`, '_blank');
+}
+
+document.getElementById('btnLimpiarFiltros').addEventListener('click', () => {
+    document.getElementById('filtroEstado').value = '';
+    document.getElementById('filtroTipo').value = '';
+    document.getElementById('filtroSede').value = '';
+
+    $('#tablaEquipos').DataTable().draw();
+    verificarFiltrosActivos();
+
+    // Opcional: limpiar también la URL
+    const url = new URL(window.location.href);
+    url.searchParams.delete('estado');
+    url.searchParams.delete('tipo');
+    url.searchParams.delete('sede');
+    window.history.replaceState({}, '', url);
+});
+
+function verificarFiltrosActivos() {
+    const estado = document.getElementById('filtroEstado').value;
+    const tipo = document.getElementById('filtroTipo').value;
+    const sede = document.getElementById('filtroSede').value;
+    const btnLimpiar = document.getElementById('btnLimpiarFiltros');
+
+    if (tipo || estado || sede) {
+        btnLimpiar.style.display = 'inline-block';
+    } else {
+        btnLimpiar.style.display = 'none';
+    }
 }

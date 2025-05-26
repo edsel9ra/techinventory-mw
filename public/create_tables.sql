@@ -39,8 +39,18 @@ CREATE TABLE tbl_equipos (
     detalle_equipo_id INT,
     responsable VARCHAR(100),
     fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
+    fecha_baja DATETIME DEFAULT NULL,
     FOREIGN KEY (sede_id) REFERENCES tbl_sedes(sede_id),
     FOREIGN KEY (tipo_equipo_id) REFERENCES tbl_tipos_equipos(tipo_equipo_id)
+);
+
+CREATE TABLE tbl_equipo_imagenes (
+    imagen_id INT AUTO_INCREMENT PRIMARY KEY,
+    equipo_id INT NOT NULL,
+    ruta_imagen VARCHAR(255),
+    descripcion VARCHAR(255),
+    fecha_subida DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (equipo_id) REFERENCES tbl_equipos(equipo_id) ON DELETE CASCADE
 );
 
 CREATE TABLE tbl_monitores (

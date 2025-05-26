@@ -1,6 +1,8 @@
 let sedesCache = [];
 const modal = new bootstrap.Modal(document.getElementById('modalEvento'));
 
+
+
 // Funciones de alerta
 function mostrarAlerta({ icon = 'info', title = '', text = '', timer = null }) {
   const config = { icon, title, text };
@@ -35,8 +37,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (allDayCheckbox.checked) {
       fechaInicioInput.type = 'date';
       fechaFinInput.type = 'date';
-      if(fechaInicioInput.value) fechaInicioInput.value = fechaInicioInput.value.split('T')[0];
-      if(fechaFinInput.value) fechaFinInput.value = fechaFinInput.value.split('T')[0];
+      if (fechaInicioInput.value) fechaInicioInput.value = fechaInicioInput.value.split('T')[0];
+      if (fechaFinInput.value) fechaFinInput.value = fechaFinInput.value.split('T')[0];
     } else {
       fechaInicioInput.type = 'datetime-local';
       fechaFinInput.type = 'datetime-local';
@@ -128,8 +130,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const color = info.draggedEl.dataset.color || '#3788d8';
 
       const inicio = new Date(info.date);
-      if(inicio.getHours() === 0 && inicio.getMinutes() === 0){
-        inicio.setHours(8,0);
+      if (inicio.getHours() === 0 && inicio.getMinutes() === 0) {
+        inicio.setHours(8, 0);
       }
       const fin = new Date(inicio);
       fin.setHours(inicio.getHours() + 1);
@@ -216,7 +218,6 @@ document.addEventListener('DOMContentLoaded', function () {
       };
 
       newBtn.addEventListener('click', guardarHandler, { once: true });
-
       document.getElementById('btnEliminarEvento').style.display = 'inline-block';
       modal.show();
     },
@@ -279,14 +280,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Función para crear eventos
   function crearEvento() {
-    // Limpia el formulario
-    document.getElementById("formEvento").reset();
-    document.getElementById("id").value = "";
-    document.getElementById("color").value = "#3788d8";
-    document.getElementById("btnGuardarEvento").textContent = 'Guardar Evento';
-    document.getElementById('btnEliminarEvento').style.display = 'none';
+    const form = document.getElementById("formEvento");
+    if (!form) return;
+  
+    form.reset();
+  
+    const eventoIdInput = document.getElementById("evento_id");
+    if (eventoIdInput) eventoIdInput.value = "";
+  
+    const colorInput = document.getElementById("color");
+    if (colorInput) colorInput.value = "#3788d8";
+  
+    const btnGuardar = document.getElementById("btnGuardarEvento");
+    if (btnGuardar) btnGuardar.textContent = "Guardar Evento";
+  
+    const btnEliminar = document.getElementById("btnEliminarEvento");
+    if (btnEliminar) btnEliminar.style.display = "none";
+  
     modal.show();
   }
+  
 
   // Función para guardar eventos
   function guardarEvento() {
@@ -331,7 +344,6 @@ document.addEventListener('DOMContentLoaded', function () {
               const eventoForm = getEventoDesdeForm();
               actualizarEvento(eventoForm);
             }
-
             form.reset();
             modal.hide();
             alertaExito(`Evento ${idEvento ? 'actualizado' : 'creado'} correctamente`);
@@ -448,7 +460,6 @@ document.addEventListener('DOMContentLoaded', function () {
           // Eliminar el evento directamente del calendario si está cargado
           const evento = calendar.getEventById(data.id);
           if (evento) evento.remove();
-
           alertaExito(data.message || 'Evento eliminado correctamente.');
           modal.hide();
         }

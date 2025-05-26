@@ -29,7 +29,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
                         <div class="small-box-icon">
                             <ion-icon name="laptop"></ion-icon>
                         </div>
-                        <a href="#" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="ListarEquipo/index.php" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
@@ -41,7 +41,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
                         <div class="small-box-icon">
                             <ion-icon name="cloud-done"></ion-icon>
                         </div>
-                        <a href="#" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="ListarEquipo/index.php?estado=activo" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
@@ -53,7 +53,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
                         <div class="small-box-icon">
                             <ion-icon name="warning"></ion-icon>
                         </div>
-                        <a href="#" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="ListarEquipo/index.php?estado=inactivo" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
@@ -65,7 +65,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
                         <div class="small-box-icon">
                             <ion-icon name="trash-bin"></ion-icon>
                         </div>
-                        <a href="#" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="ListarEquipo/index.php?estado=baja" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -100,7 +100,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
                         <div class="small-box-icon">
                             <ion-icon name="construct"></ion-icon>
                         </div>
-                        <a href="#" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-4 col-6">
@@ -112,7 +111,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
                         <div class="small-box-icon">
                             <ion-icon name="today"></ion-icon>
                         </div>
-                        <a href="#" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-4 col-6">
@@ -124,7 +122,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
                         <div class="small-box-icon">
                             <ion-icon name="sync"></ion-icon>
                         </div>
-                        <a href="#" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>

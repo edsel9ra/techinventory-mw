@@ -228,6 +228,10 @@ class Equipo extends Conectar
         return $conectar->lastInsertId();
     }
 
+    /** 
+     * Se agregan otros tipos de equipos
+     */
+
     //Obetner los monitores bajo ciertas condiciones y de una determinada sede, debe estar registrado el monitor
     public function get_monitor($sede_id = null)
     {
@@ -453,7 +457,7 @@ class Equipo extends Conectar
             }
 
             // 1. Traer información actual del equipo
-            $stmt = $conectar->prepare("SELECT tipo_equipo_id, detalle_equipo_id FROM tbl_equipos WHERE equipo_id = ?");
+            $stmt = $conectar->prepare("SELECT tipo_equipo_id, detalle_equipo_id, estado FROM tbl_equipos WHERE equipo_id = ?");
             $stmt->execute([$equipo_id]);
             $equipoExistente = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -462,19 +466,39 @@ class Equipo extends Conectar
             }
 
             // 2. Actualizar tabla general tbl_equipos
-            $stmt = $conectar->prepare("UPDATE tbl_equipos SET 
-            sede_id = ?, 
-            estado = ?, 
-            responsable = ?
-            WHERE equipo_id = ?
-        ");
+            $estadoAnterior = $equipoExistente['estado'];
+            $estadoNuevo = $datos['estado'];
 
-            $stmt->execute([
-                $datos['sede'],
-                $datos['estado'],
-                $datos['responsable'],
-                $equipo_id
-            ]);
+            if ($estadoAnterior !== 'Baja' && $estadoNuevo === 'Baja') {
+                $fechaBaja = date('Y-m-d H:i:s');
+                $stmt = $conectar->prepare("UPDATE tbl_equipos SET 
+                    sede_id = ?, 
+                    estado = ?, 
+                    responsable = ?,
+                    fecha_baja = ?
+                    WHERE equipo_id = ?
+                ");
+                $stmt->execute([
+                    $datos['sede'],
+                    $estadoNuevo,
+                    $datos['responsable'],
+                    $fechaBaja,
+                    $equipo_id
+                ]);
+            } else {
+                $stmt = $conectar->prepare("UPDATE tbl_equipos SET 
+                    sede_id = ?, 
+                    estado = ?, 
+                    responsable = ?
+                    WHERE equipo_id = ?
+                ");
+                $stmt->execute([
+                    $datos['sede'],
+                    $estadoNuevo,
+                    $datos['responsable'],
+                    $equipo_id
+                ]);
+            }
 
             // 3. Actualizar tabla de detalles según tipo de equipo
             $tipoEquipo = intval($datos['tipo_equipo_id']); // Usamos el tipo nuevo seleccionado
@@ -749,6 +773,53 @@ class Equipo extends Conectar
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
             throw new Exception("Error al obtener los equipos por sede activos: " . $e->getMessage());
+        }
+    }
+
+    public function insertImagenEquipo($equipo_id, $ruta_imagen, $descripcion = null)
+    {
+        try {
+            $conectar = parent::conexion();
+            $stmt = $conectar->prepare("INSERT INTO tbl_equipo_imagenes (equipo_id, ruta_imagen, descripcion) VALUES (?, ?, ?)");
+            $stmt->execute([$equipo_id, $ruta_imagen, $descripcion]);
+            return true;
+        } catch (Exception $e) {
+            throw new Exception("Error al insertar la imagen del equipo: " . $e->getMessage());
+        }
+    }
+
+    public function get_imagenes_equipo($equipo_id)
+    {
+        try {
+            $conectar = parent::conexion();
+            $stmt = $conectar->prepare("SELECT * FROM tbl_equipo_imagenes WHERE equipo_id = ?");
+            $stmt->execute([$equipo_id]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw new Exception("Error al obtener las imagenes del equipo: " . $e->getMessage());
+        }
+    }
+
+    public function deleteImagenEquipo($imagen_id)
+    {
+        try {
+            $conectar = parent::conexion();
+            $stmt = $conectar->prepare("SELECT * FROM tbl_equipo_imagenes WHERE imagen_id = ?");
+            $stmt->execute([$imagen_id]);
+            $img = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$img) {
+                throw new Exception("❌ La imagen no existe");
+            }
+
+            $rutaFisica = __DIR__ . '/../' . ltrim($img['ruta_imagen'], '/');
+            if (file_exists($rutaFisica)) {
+                unlink($rutaFisica);
+            }
+            $stmt = $conectar->prepare("DELETE FROM tbl_equipo_imagenes WHERE imagen_id = ?");
+            $stmt->execute([$imagen_id]);
+            return true;
+        } catch (Exception $e) {
+            throw new Exception("Error al eliminar la imagen del equipo: " . $e->getMessage());
         }
     }
 }
