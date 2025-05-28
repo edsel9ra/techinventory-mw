@@ -17,12 +17,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1 && $_SESSION['rol_i
 </head>
 <body>
     <?php require_once __DIR__ . '/../../public/main/nav.php'; ?>
-    <div class="container">
+    <section class="main-content mt-3 mb-3">
         <div class="p-4 bg-white shadow rounded">
             <h1>Calendario de eventos anuales</h1>
             <div id='multicalendar'></div>
         </div>
-    </div>
+    </section>
     <?php require_once __DIR__ . '/../../public/main/js.php'; ?>
     <script src="multicalendario.js"></script>
 </body>

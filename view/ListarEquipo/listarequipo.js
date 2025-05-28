@@ -81,9 +81,9 @@ function renderTablaConDataTable(data, estadoInicial='') {
                 data: 4,
                 render: (data) => {
                     switch (data) {
-                        case "Activo": return '<span class="badge bg-success">Activo</span>';
-                        case "Inactivo": return '<span class="badge bg-secondary">Inactivo</span>';
-                        default: return '<span class="badge bg-danger">Dado de Baja</span>';
+                        case "Activo": return '<span class="badge rounded-pill bg-success">Activo</span>';
+                        case "Inactivo": return '<span class="badge rounded-pill bg-secondary">Inactivo</span>';
+                        default: return '<span class="badge rounded-pill bg-danger">Dado de Baja</span>';
                     }
                 }
             },

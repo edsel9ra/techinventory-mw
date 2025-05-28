@@ -10,13 +10,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
 
 <head>
     <!-- Head -->
-    <?php require_once "../public/main/head.php"; ?>
+    <?php require_once __DIR__ . '/../public/main/head.php'; ?>
     <title>Administrador - Dashboard</title>
 </head>
 
 <body>
-    <?php require_once "../public/main/nav.php"; ?>
-    <section class="container mt-4">
+    <?php require_once __DIR__ . '/../public/main/nav.php'; ?>
+    <section class="main-content mt-3 mb-3">
         <div class="p-4 bg-white shadow rounded">
             <div class="row mb-4 mt-4" id="resumen">
                 <h2 class="text-center">Resumen</h2>
@@ -29,7 +29,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
                         <div class="small-box-icon">
                             <ion-icon name="laptop"></ion-icon>
                         </div>
-                        <a href="ListarEquipo/index.php" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="ListarEquipo/index.php" class="small-box-footer">Más información<i
+                                class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
@@ -41,7 +42,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
                         <div class="small-box-icon">
                             <ion-icon name="cloud-done"></ion-icon>
                         </div>
-                        <a href="ListarEquipo/index.php?estado=activo" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="ListarEquipo/index.php?estado=activo" class="small-box-footer">Más información<i
+                                class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
@@ -53,7 +55,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
                         <div class="small-box-icon">
                             <ion-icon name="warning"></ion-icon>
                         </div>
-                        <a href="ListarEquipo/index.php?estado=inactivo" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="ListarEquipo/index.php?estado=inactivo" class="small-box-footer">Más información<i
+                                class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
@@ -65,7 +68,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
                         <div class="small-box-icon">
                             <ion-icon name="trash-bin"></ion-icon>
                         </div>
-                        <a href="ListarEquipo/index.php?estado=baja" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="ListarEquipo/index.php?estado=baja" class="small-box-footer">Más información<i
+                                class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -153,15 +157,23 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
                     </div>
                 </div>
             </div>
+            <div class="row mt-4 mb-4" id="mntosPorTecnico">
+                <h2 class="text-center">Mantenimientos por técnico</h2>
+                <div class="col-12 d-flex flex-column align-items-center">
+                    <div style="width: 100%; max-width: 900px;">
+                        <canvas id="graficoMntosPorTecnico" height="150"></canvas>
+                        <div id="totalMantenimientosTecnico" class="text-center mt-3 fw-bold fs-5"></div>
+                    </div>
+                </div>
+            </div>
         </div>
+        <div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1100;"></div>
     </section>
 
     <!-- JS Principal -->
-    <?php require_once "../public/main/js.php"; ?>
-    <script defer src="../public/js/estadistica.js"></script>
-    <script>
-        const rol_id = <?php echo $_SESSION['rol_id']; ?>;
-    </script>
+    <?php require_once __DIR__ . '/../public/main/js.php'; ?>
+    <?php require_once __DIR__ . '/../public/main/dashboard.php'; ?>
+
 </body>
 
 </html>

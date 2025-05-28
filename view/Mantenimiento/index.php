@@ -13,16 +13,16 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1 && $_SESSION['rol_i
 <html lang="es">
 
 <head>
-    <?php require_once "../../public/main/head.php"; ?>
+    <?php require_once __DIR__ . '/../../public/main/head.php'; ?>
     <title>Formato Mantenimiento de Equipos de Cómputo</title>
 </head>
 
 <body>
-    <?php require_once "../../public/main/nav.php"; ?>
-    <section class="container mt-4">
+    <?php require_once __DIR__ . '/../../public/main/nav.php'; ?>
+    <section class="main-content mt-3 mb-3">
         <div class="card">
             <div class="card-body">
-                <?php require_once "../../view/resources/form_header.php"; ?>
+                <?php require_once __DIR__ . '/../../view/resources/form_header.php'; ?>
                 <form id="formMantenimiento">
                     <input type="hidden" id="equipo_id" name="equipo_id"
                         value="<?= htmlspecialchars($_GET['equipo_id'] ?? '') ?>">
@@ -150,7 +150,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1 && $_SESSION['rol_i
         </div>
     </section>
 
-    <?php require_once "../../public/main/js.php"; ?>
+    <?php require_once __DIR__ . '/../../public/main/js.php'; ?>
     <script type="text/javascript" src="mantenimiento.js"></script>
 </body>
 

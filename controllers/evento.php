@@ -32,7 +32,7 @@ switch ($_GET["op"]) {
             $end = $isAllDay ? substr($row['fecha_fin'], 0, 10) : (new DateTime($row['fecha_fin']))->format('Y-m-d H:i:s');
 
             $data[] = [
-                'evento_id' => $row['evento_id'],
+                'id' => $row['evento_id'],
                 'title' => $row['titulo'],
                 'start' => $start,
                 'end' => $end,
@@ -140,6 +140,10 @@ switch ($_GET["op"]) {
             $datos = [];
             $evento_id = $_POST['evento_id'];
 
+            if (!$evento->existeEvento($evento_id)) {
+                throw new Exception("❌ Evento no encontrado.");
+            }
+
             if (isset($_POST['titulo']))
                 $datos['titulo'] = $_POST['titulo'];
             if (isset($_POST['descripcion']))
@@ -222,4 +226,36 @@ switch ($_GET["op"]) {
             ]);
         }
         break;
+
+        case 'listar_eventos_proximos_en_curso':
+            verificarRol([1,2]);
+            try{
+                $eventos = $evento->getEventosProximosEnCurso();
+                $mensajes_eventos = [];
+                $hoy = new DateTime();
+
+                foreach ($eventos as $ev) {
+                    $inicio = new DateTime($ev['fecha_inicio']);
+                    $fin = new DateTime($ev['fecha_fin']);
+
+                    if ($hoy <$inicio && $hoy->diff($inicio)->days <= 3) {
+                        $dias = $hoy->diff($inicio)->days;
+                        $mensajes_eventos[] = "El evento " . $ev['titulo'] . " en la sede " . $ev['sede'] . " comienza en " . $dias . " días";
+                    } else if ($hoy >= $inicio && $hoy <= $fin) {
+                        $mensajes_eventos[] = "El evento " . $ev['titulo'] . " en la sede " . $ev['sede'] . " ya se encuentra en curso";
+                    }
+                }
+
+                echo json_encode([
+                    "status" => true,
+                    "eventos" => $eventos,
+                    "mensajes" => $mensajes_eventos
+                ]);
+            }catch(Exception $e){
+                echo json_encode([
+                    "status" => false,
+                    "message" => "❌ " . $e->getMessage()
+                ]);
+            }
+            break;
 }

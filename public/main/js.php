@@ -1,6 +1,14 @@
 <?php
 require_once __DIR__ . '/../../autoload.php';
 ?>
+<!-- Menu -->
+<script type="text/javascript" src="<?php echo BASE_URL; ?>public/js/menu.js"></script>
+
+<!-- ROL -->
+<script>
+    const rol_id = <?php echo $_SESSION['rol_id']; ?>;
+</script>
+
 <!-- Bootstrap -->
 <script src="<?php echo BASE_URL; ?>public/js/lib/bootstrap/bootstrap.bundle.min.js"></script>
 

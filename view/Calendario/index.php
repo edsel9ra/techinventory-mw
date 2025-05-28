@@ -22,7 +22,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
 
 <body>
     <?php require_once __DIR__ . '/../../public/main/nav.php'; ?>
-    <div class="container mt-4">
+    <div class="main-content mt-3 mb-3">
         <div class="p-4 bg-white shadow rounded">
             <div class="row">
                 <div class="col">
@@ -125,9 +125,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
     <!-- JS -->
     <?php require_once __DIR__ . '/../../public/main/js.php'; ?>
     <script src="calendario.js"></script>
-    <script>
-        const rol_id = <?php echo $_SESSION['rol_id']; ?>;
-    </script>
 </body>
 
 </html>

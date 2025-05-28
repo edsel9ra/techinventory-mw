@@ -10,13 +10,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 3) {
 
 <head>
     <!-- Head -->
-    <?php require_once "../public/main/head.php"; ?>
+    <?php require_once __DIR__ . '/../public/main/head.php'; ?>
     <title>Gestión de Equipos - Dashboard</title>
 </head>
 
 <body>
-    <?php require_once "../public/main/nav.php"; ?>
-    <section class="container mt-4">
+    <?php require_once __DIR__ . '/../public/main/nav.php'; ?>
+    <section class="main-content mt-3 mb-3">
         <div class="p-4 bg-white shadow rounded">
         <div class="row mb-4 mt-4" id="resumen">
                 <h2 class="text-center">Resumen</h2>
@@ -29,7 +29,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 3) {
                         <div class="small-box-icon">
                             <ion-icon name="laptop"></ion-icon>
                         </div>
-                        <a href="#" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="ListarEquipo/index.php" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
@@ -41,7 +41,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 3) {
                         <div class="small-box-icon">
                             <ion-icon name="cloud-done"></ion-icon>
                         </div>
-                        <a href="#" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="ListarEquipo/index.php?estado=activo" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
@@ -53,7 +53,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 3) {
                         <div class="small-box-icon">
                             <ion-icon name="warning"></ion-icon>
                         </div>
-                        <a href="#" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="ListarEquipo/index.php?estado=inactivo" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
@@ -65,7 +65,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 3) {
                         <div class="small-box-icon">
                             <ion-icon name="trash-bin"></ion-icon>
                         </div>
-                        <a href="#" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="ListarEquipo/index.php?estado=baja" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -93,7 +93,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 3) {
     </section>
 
     <!-- JS Principal -->
-    <?php require_once "../public/main/js.php"; ?>
+    <?php require_once __DIR__ . '/../public/main/js.php'; ?>
     <script defer src="../public/js/estadistica.js"></script>
     <script>
         const rol_id = <?php echo $_SESSION['rol_id']; ?>;

@@ -140,4 +140,22 @@ switch ($_GET["op"]) {
             'data' => $resultado
         ]);
         break;
+
+    case 'mantenimientos_por_tecnico':
+        verificarRol([1, 2]);
+        try{
+            $anio = isset($_GET['anio']) ? intval($_GET['anio']) : date('Y');
+            $mes = isset($_GET['mes']) ? intval($_GET['mes']) : date('m');
+            $resultado = $mantenimiento->mantenimientosPorTecnico($anio, $mes);
+            echo json_encode([
+                'status' => true,
+                'data' => $resultado
+            ]);
+        }catch(Exception $e){
+            echo json_encode([
+                'status' => false,
+                'message' => '❌ Error al obtener el total de mantenimientos por tecnico: ' . $e->getMessage()
+            ]);
+        }
+        break;
 }

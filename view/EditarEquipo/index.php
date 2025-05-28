@@ -22,7 +22,7 @@ if ($equipo_id) {
 <html lang="es">
 
 <head>
-    <?php require_once "../../public/main/head.php"; ?>
+    <?php require_once __DIR__ . '/../../public/main/head.php'; ?>
     <title>Editar Equipo</title>
     <style>
         @keyframes spin {
@@ -33,8 +33,8 @@ if ($equipo_id) {
 </head>
 
 <body>
-    <?php require_once "../../public/main/nav.php"; ?>
-    <div class="container mt-4">
+    <?php require_once __DIR__ . '/../../public/main/nav.php'; ?>
+    <div class="main-content mt-3 mb-3">
         <div class="p-4 bg-white shadow rounded">
             <form id="formEditarEquipo" method="POST">
                 <div class="row">
@@ -87,7 +87,7 @@ if ($equipo_id) {
             </form>
         </div>
     </div>
-    <?php require_once "../../public/main/js.php"; ?>
+    <?php require_once __DIR__ . '/../../public/main/js.php'; ?>
     <script src="editarequipo.js"></script>
 </body>
 

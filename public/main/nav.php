@@ -96,3 +96,8 @@ $rol = $_SESSION['rol_id'] ?? null;
         </ul>
     </div>
 </nav>
+<button class="btn btn-outline-secondary d-md-none m-2" id="btnToggleMenu">
+    <i class="fa-solid fa-bars" id="iconoToggle"></i>
+</button>
+<!-- Overlay oscuro para fondo móvil -->
+<div id="menuOverlay" class="menu-overlay d-none"></div>

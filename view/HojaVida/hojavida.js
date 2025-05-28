@@ -55,7 +55,7 @@ function mostrarDetalle(equipo) {
     });
 
     let detalleHtml = `
-            <h2>Hoja de Vida del Equipo: ${equipo.cod_equipo}</h2>
+            <h2 class="col d-flex align-items-center justify-content-center mb-3">Hoja de Vida del Equipo: ${equipo.cod_equipo}</h2>
             <div class="btn-group w-100 justify-content-between gap-2 flex-wrap">
                 <button type="button" class="btn btn-info fw-bold d-flex align-items-center gap-2 justify-content-center flex-nowrap"
                     data-bs-toggle="collapse" data-bs-target="#multiCollapseInfoEquipo"
@@ -247,7 +247,7 @@ function mostrarDetalle(equipo) {
                     <span class="input-group-text"><i class="fa-solid fa-clipboard-list"></i></span>
                     <input type="text" name="descripcion" class="form-control" placeholder="Ej. Vista frontal, etc">
                 </div>
-                <small class="form-text text-muted">Si agrega más de una imagen, la descripción se aplica a todas las imágenes.</small>
+                <small class="form-text text-muted">La descripción se aplica a todas las imágenes que subirás.</small>
             </div>
             <!-- Botón de subir -->
             <div class="col-md-2 d-grid">

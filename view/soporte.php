@@ -9,13 +9,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 2) {
 <html lang="es">
 
 <head>
-    <?php require_once "../public/main/head.php"; ?>
+    <?php require_once __DIR__ . '/../public/main/head.php'; ?>
     <title>Técnico - Dashboard</title>
 </head>
 
 <body>
-    <?php require_once "../public/main/nav.php"; ?>
-    <section class="container mt-4">
+    <?php require_once __DIR__ . '/../public/main/nav.php'; ?>
+    <section class="main-content mt-3 mb-3">
         <div class="p-4 bg-white shadow rounded">
             <div class="row mt-4 mb-4" id="resumenMntos">
                 <h2 class="text-center">Resumen de Mantenimientos</h2>
@@ -28,7 +28,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 2) {
                         <div class="small-box-icon">
                             <ion-icon name="construct"></ion-icon>
                         </div>
-                        <a href="#" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-4 col-6">
@@ -40,7 +39,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 2) {
                         <div class="small-box-icon">
                             <ion-icon name="today"></ion-icon>
                         </div>
-                        <a href="#" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-4 col-6">
@@ -52,7 +50,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 2) {
                         <div class="small-box-icon">
                             <ion-icon name="sync"></ion-icon>
                         </div>
-                        <a href="#" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -85,14 +82,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 2) {
                 </div>
             </div>
         </div>
+        <div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1100;"></div>
     </section>
 
     <!-- JS Principal -->
-    <?php require_once "../public/main/js.php"; ?>
-    <script defer src="../public/js/estadistica.js"></script>
-    <script>
-        const rol_id = <?php echo $_SESSION['rol_id']; ?>;
-    </script>
+    <?php require_once __DIR__ . '/../public/main/js.php'; ?>
+    <?php require_once __DIR__ . '/../public/main/dashboard.php'; ?>
 </body>
 
 </html>

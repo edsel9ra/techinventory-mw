@@ -39,7 +39,12 @@ CREATE TABLE tbl_equipos (
     detalle_equipo_id INT,
     responsable VARCHAR(100),
     fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
-    fecha_baja DATETIME DEFAULT NULL,
+    fecha_baja DATE DEFAULT NULL,
+    proceso_baja VARCHAR(50) DEFAULT NULL,
+    motivo_baja VARCHAR(70) DEFAULT NULL,
+    /*
+    motivo_baja ENUM('Mal estado', 'Mal uso', 'Daño eléctrico / electrónico','Obsoleto', 'Siniestro', 'Perdida o hurto', 'Deterioro', 'Otro') DEFAULT NULL,*/
+    concepto_tecnico_baja TEXT DEFAULT NULL,
     FOREIGN KEY (sede_id) REFERENCES tbl_sedes(sede_id),
     FOREIGN KEY (tipo_equipo_id) REFERENCES tbl_tipos_equipos(tipo_equipo_id)
 );

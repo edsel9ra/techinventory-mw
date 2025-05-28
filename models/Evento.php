@@ -28,13 +28,13 @@ class Evento extends Conectar
         }
     }
 
-    public function updateEvento($id, $data)
+    public function updateEvento($evento_id, $data)
     {
         $conectar = parent::conexion();
         try {
             $conectar->beginTransaction();
 
-            $stmt = $conectar->prepare("UPDATE tbl_eventos_calendario SET titulo = :titulo, descripcion = :descripcion, fecha_inicio = :fecha_inicio, fecha_fin = :fecha_fin, all_day = :all_day, color = :color, sede_id = :sede_id WHERE id = :id");
+            $stmt = $conectar->prepare("UPDATE tbl_eventos_calendario SET titulo = :titulo, descripcion = :descripcion, fecha_inicio = :fecha_inicio, fecha_fin = :fecha_fin, all_day = :all_day, color = :color, sede_id = :sede_id WHERE evento_id = :evento_id");
 
             $stmt->execute([
                 'titulo' => $data['titulo'] ?? '',
@@ -44,7 +44,7 @@ class Evento extends Conectar
                 'all_day' => isset($data['all_day']) ? intval($data['all_day']) : 0,
                 'color' => $data['color'] ?? '#3788d8',
                 'sede_id' => $data['sede_id'] ?? null,
-                'id' => intval($id),
+                'evento_id' => intval($evento_id),
             ]);
 
             $conectar->commit();
@@ -56,21 +56,47 @@ class Evento extends Conectar
     }
 
 
-    public function deleteEvento($id)
+    public function deleteEvento($evento_id)
     {
         $conectar = parent::conexion();
         try {
             $conectar->beginTransaction();
 
-            $stmt = $conectar->prepare("UPDATE tbl_eventos_calendario SET activo = 0 WHERE id = :id");
+            $stmt = $conectar->prepare("UPDATE tbl_eventos_calendario SET activo = 0 WHERE evento_id = :evento_id");
             $stmt->execute([
-                'id' => intval($id),
+                'evento_id' => intval($evento_id),
             ]);
             $conectar->commit();
             return true;
         } catch (Exception $e) {
             $conectar->rollBack();
             throw new Exception("Error al eliminar evento: " . $e->getMessage());
+        }
+    }
+
+    public function getEventosProximosEnCurso(){
+        try{
+            $conectar = parent::conexion();
+            $stmt = $conectar->prepare("SELECT ev.titulo, ev.fecha_inicio, ev.fecha_fin, s.nombre_sede as sede FROM tbl_eventos_calendario ev JOIN tbl_sedes s ON ev.sede_id = s.sede_id WHERE ev.activo = 1 AND (ev.fecha_inicio BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 3 DAY) OR NOW() BETWEEN ev.fecha_inicio AND ev.fecha_fin)");
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        }catch(Exception $e){
+            throw new Exception("Error al obtener eventos proximos en curso: " . $e->getMessage());
+        }
+    }
+
+    public function existeEvento($evento_id){
+        try{
+            $conectar = parent::conexion();
+            $stmt = $conectar->prepare("SELECT COUNT(*) FROM tbl_eventos_calendario WHERE evento_id = :evento_id");
+            $stmt->execute([
+                'evento_id' => intval($evento_id),
+            ]);
+            $result = $stmt->fetchColumn() > 0;
+            return $result;
+        }catch(Exception $e){
+            throw new Exception("Error al verificar evento: " . $e->getMessage());
         }
     }
 }

@@ -12,26 +12,26 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1 && $_SESSION['rol_i
 <html lang="es">
 
 <head>
-    <?php require_once "../../public/main/head.php"; ?>
+    <?php require_once __DIR__ . '/../../public/main/head.php'; ?>
     <title>Registrar Equipo</title>
 </head>
 
 <body>
-    <?php require_once "../../public/main/nav.php"; ?>
+    <?php require_once __DIR__ . '/../../public/main/nav.php'; ?>
     <!-- Campos fijos -->
-    <section class="container mt-4">
+    <section class="main-content mt-3 mb-3">
         <div class="p-4 bg-white shadow rounded">
             <form id="form_equipo">
                 <div class="row">
-                    <div class="col">
+                    <div class="col d-flex align-items-center justify-content-center">
                         <h2 class="mb-3">Registro de nuevo equipo en inventario</h2>
                     </div>
                     <div class="col-auto d-flex align-items-center gap-1">
-                        <button type="submit" id="btnGuardar" class="btn btn-primary ms-2 me-2 fw-bold d-flex align-items-center gap-2 justify-content-center flex-nowrap">
+                        <button type="submit" id="btnGuardar" class="btn btn-primary ms-2 mb-3 fw-bold d-flex align-items-center gap-2 justify-content-center flex-nowrap">
                             <span><i class="fa-solid fa-floppy-disk"></i></span>
                             <span>Guardar</span>
                         </button>
-                        <button id="btnRegresar" class="btn btn-secondary ms-2 me-2 fw-bold d-flex align-items-center gap-2 justify-content-center flex-nowrap">
+                        <button id="btnRegresar" class="btn btn-secondary ms-2 mb-3 fw-bold d-flex align-items-center gap-2 justify-content-center flex-nowrap">
                             <span><i class="fa-solid fa-arrow-left"></i></span>
                             <span>Regresar</span>
                         </button>
@@ -96,13 +96,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1 && $_SESSION['rol_i
                         </div>
                     </div>
                 </div>
-                <div class="container" id="campos_detalles" style="margin-top: 20px;"></div>
+                <div class="main-content" id="campos_detalles"></div>
             </form>
         </div>
     </section>
 
     <!-- JS Principal -->
-    <?php require_once "../../public/main/js.php"; ?>
+    <?php require_once __DIR__ . '/../../public/main/js.php'; ?>
     <script type="text/javascript" src="nuevoequipo.js"></script>
 
 </body>

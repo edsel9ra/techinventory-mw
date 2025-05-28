@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
         contarMntosTotal();
         contarMntosPreventivos();
         contarMntosCorrectivos();
+        graficoMntosPorTecnico();
     }
 
     if (rol_id === 1 || rol_id === 3) {
@@ -328,7 +329,7 @@ function graficarMntosPorMes(anio, tipo = '') {
                 });
 
                 // Mostrar total acumulado
-                const totalText = tipo 
+                const totalText = tipo
                     ? `Total de mantenimientos ${tipo.toLowerCase()}s en ${anio}: ${total}`
                     : `Total de mantenimientos en ${anio}: ${total}`;
                 document.getElementById('totalMantenimientos').textContent = totalText;
@@ -366,4 +367,66 @@ function graficarMntosPorMes(anio, tipo = '') {
                 });
             }
         });
+}
+
+function graficoMntosPorTecnico() {
+    fetch('../controllers/mantenimiento.php?op=mantenimientos_por_tecnico')
+        .then(res => res.json())
+        .then(data => {
+            if (!data.status) return;
+
+            const raw = data.data;
+
+            const tecnicos = [...new Set(raw.map(r => r.tecnico))];
+            const preventivos = tecnicos.map(tecnico => {
+                const item = raw.find(r => r.tecnico === tecnico && r.tipo === 'Preventivo');
+                return item ? item.total : 0;
+            });
+            const correctivos = tecnicos.map(tecnico => {
+                const item = raw.find(r => r.tecnico === tecnico && r.tipo === 'Correctivo');
+                return item ? item.total : 0;
+            });
+
+            const ctx = document.getElementById('graficoMntosPorTecnico').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: tecnicos,
+                    datasets: [
+                        {
+                            label: 'Preventivos',
+                            data: preventivos,
+                            backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Correctivos',
+                            data: correctivos,
+                            backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Mantenimientos por técnico (mes actual)'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
 }

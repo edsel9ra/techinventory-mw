@@ -248,22 +248,12 @@ nav.main-menu li.active>a,
 .settings {
     height: 73px;
     float: left;
-    background: url(https://s3.postimg.org/bqfooag4z/startific.jpg);
     background-repeat: no-repeat;
     width: 250px;
     margin: 0px;
     text-align: center;
     font-size: 20px;
     font-family: 'Strait', sans-serif;
-}
-
-.container {
-    padding-left: 60px; /* Para que el contenido no se solape cuando el menú está colapsado */
-    transition: padding-left 0.2s ease-in-out;
-}
-
-.main-menu:hover ~ .container{
-    padding-left: 150px; /* Ajusta al tamaño expandido del menú cuando el usuario lo pasa por encima */
 }
 
 .card-maximized {
@@ -367,3 +357,61 @@ nav.main-menu li.active>a,
     margin-top: 8px;
     text-align: center;
 }
+
+/* Estilo base del contenedor */
+.main-content {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1200px;
+    width: calc(100% - 60px); /* Menú colapsado (55px + padding) */
+    padding-left: 60px;
+    transition: 
+        width 0.3s ease-in-out, 
+        transform 0.3s ease-in-out, 
+        margin-left 0.3s ease-in-out;
+    transform: translateX(0); /* Posición por defecto */
+}
+
+/* Cuando el menú se expande */
+.main-menu:hover ~ .main-content {
+    width: calc(100% - 190px); /* Menú expandido */
+    transform: translateX(60px); /* Empuja visualmente el contenido */
+}
+
+/* Estilo del menú móvil oculto y con transición */
+@media (max-width: 768px) {
+    .main-menu {
+      transform: translateX(-100%);
+      width: 190px;
+      transition: transform 0.3s ease-in-out;
+      z-index: 1001;
+    }
+  
+    .main-menu.active {
+      transform: translateX(0);
+    }
+  
+    .main-content {
+      transition: transform 0.3s ease-in-out;
+    }
+  
+    .main-menu.active ~ .main-content {
+      transform: translateX(190px);
+    }
+  
+    /* Overlay oscuro */
+    .menu-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+      transition: opacity 0.3s ease-in-out;
+    }
+  
+    .main-menu:not(.active) ~ .menu-overlay {
+      display: none !important;
+    }
+  }  

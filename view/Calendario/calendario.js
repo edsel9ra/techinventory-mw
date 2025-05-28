@@ -193,6 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
     eventClick: function (info) {
       info.el.style.cursor = 'pointer';
       const event = info.event;
+      console.log(event);
 
       document.getElementById('evento_id').value = event.id;
       document.getElementById('titulo').value = event.title;
@@ -386,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const datos = new URLSearchParams({
-      id: event.id,
+      evento_id: event.id,
       titulo: event.title,
       fecha_inicio: event.allDay ? formatDateOnly(fechaInicio) : formatDateTimeLocal(fechaInicio),
       fecha_fin: event.allDay ? formatDateOnly(fechaFin) : formatDateTimeLocal(fechaFin),
@@ -450,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     fetch('../../controllers/evento.php?op=delete', {
       method: 'POST',
-      body: new URLSearchParams({ id }),
+      body: new URLSearchParams({ evento_id: id }),
     })
       .then(response => response.json())
       .then(data => {
@@ -461,6 +462,7 @@ document.addEventListener('DOMContentLoaded', function () {
           const evento = calendar.getEventById(data.id);
           if (evento) evento.remove();
           alertaExito(data.message || 'Evento eliminado correctamente.');
+          calendar.refetchEvents();
           modal.hide();
         }
       })
@@ -480,7 +482,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const formDataObj = Object.fromEntries(formData.entries());
 
     return {
-      id: formDataObj.id,
+      id: formDataObj.evento_id,
       title: formDataObj.titulo,
       start: formDataObj.fecha_inicio,
       end: formDataObj.fecha_fin,
