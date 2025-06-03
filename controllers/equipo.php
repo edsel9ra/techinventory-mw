@@ -251,6 +251,14 @@ switch ($_GET["op"]) {
                 'detalles' => $detalles
             ];
 
+            // Si el estado es Baja, agregar los campos de baja
+            if ($datos['estado'] === 'Baja') {
+                $datos['proceso_baja'] = $_POST['proceso_baja'] ?? null;
+                $datos['motivo_baja'] = $_POST['motivo_baja'] ?? null;
+                $datos['otro_motivo_baja'] = $_POST['otro_motivo_baja'] ?? null;
+                $datos['concepto_tecnico_baja'] = $_POST['concepto_tecnico_baja'] ?? null;
+            }
+
             $resultado = $equipo->editarEquipo($equipo_id, $datos);
 
             if ($resultado) {
@@ -322,7 +330,7 @@ switch ($_GET["op"]) {
             $fecha = $formatter->format(new DateTime());
             class PDF extends FPDF
             {
-                function Footer()
+                public function Footer()
                 {
                     $this->SetY(-35);
                     $this->SetFont("Arial", "I", 10);
@@ -653,6 +661,151 @@ switch ($_GET["op"]) {
             echo json_encode([
                 'status' => false,
                 'message' => $e->getMessage()
+            ]);
+        }
+        break;
+
+    case 'acta_baja_pdf':
+        verificarRol([1, 3]);
+        try {
+            $equipo_id = $_GET['equipo_id'] ?? null;
+            if (empty($equipo_id)) {
+                throw new Exception("❌ El ID del equipo no es válido.");
+            }
+
+            $equipo_data = $equipo->get_equipo_id($equipo_id);
+            if (empty($equipo_data)) {
+                throw new Exception("❌ No se encontró información del equipo.");
+            }
+
+            class PDF extends FPDF
+            {
+                public function Header()
+                {
+                    $this->AddFont('Impact', '', 'impact.php');
+                    $this->SetFont('Impact', '', 22);
+                    $this->Image(__DIR__ . '/../public/img/logo_sin_circulo.png', 15, 2, 35);
+                    $this->Cell(0, 10, mb_convert_encoding('FORMATO', "ISO-8859-1", "UTF-8"), 0, 1, 'C');
+                    $this->Cell(0, 10, mb_convert_encoding('ACTA DE BAJA ACTIVOS FIJOS', "ISO-8859-1", "UTF-8"), 0, 1, 'C');
+                    $this->Ln(7);
+                }
+            }
+
+            $pdf = new PDF();
+            $pdf->AddPage();
+            $pdf->SetFont("Arial", "", 10);
+
+            $fecha_formateada = date("d-M-Y", strtotime($equipo_data['fecha_baja']));
+
+            $pdf->SetFont("Arial", "BI", 11);
+            $pdf->Cell(45, 10, mb_convert_encoding('FECHA', "ISO-8859-1", "UTF-8"), 1, 0, 'C');
+            $pdf->SetFont("Arial", "", 11);
+            $pdf->Cell(50, 10, $fecha_formateada, 1, 0, 'C');
+            $pdf->SetFont("Arial", "BI", 11);
+            $pdf->Cell(45, 10, mb_convert_encoding('PROCESO', "ISO-8859-1", "UTF-8"), 1, 0, 'C');
+            $pdf->SetFont("Arial", "", 11);
+            $pdf->Cell(50, 10, mb_convert_encoding($equipo_data['proceso_baja'], "ISO-8859-1", "UTF-8"), 1, 1, 'C');
+            $pdf->SetFont("Arial", "BI", 11);
+            $pdf->Cell(45, 10, mb_convert_encoding('SEDE', "ISO-8859-1", "UTF-8"), 1, 0, 'C');
+            $pdf->SetFont("Arial", "", 11);
+            $pdf->Cell(50, 10, mb_convert_encoding($equipo_data['nombre_sede'], "ISO-8859-1", "UTF-8"), 1, 0, 'C');
+            $pdf->SetFont("Arial", "BI", 11);
+            $pdf->Cell(45, 10, mb_convert_encoding('RESPONSABLE', "ISO-8859-1", "UTF-8"), 1, 0, 'C');
+            $pdf->SetFont("Arial", "", 11);
+            $pdf->Cell(50, 10, mb_convert_encoding($equipo_data['responsable'], "ISO-8859-1", "UTF-8"), 1, 1, 'C');
+
+
+            $pdf->Ln(5);
+            $pdf->SetFont("Arial", "B", 11);
+            $pdf->Cell(0, 10, mb_convert_encoding('DESCRIPCIÓN DE ELEMENTO / EQUIPO', "ISO-8859-1", "UTF-8"), 1, 1, 'C');
+            $pdf->SetFont("Arial", "BI", 11);
+            $pdf->Cell(45, 10, mb_convert_encoding('EQUIPO', "ISO-8859-1", "UTF-8"), 1, 0, 'C');
+            $pdf->SetFont("Arial", "", 11);
+            $pdf->Cell(50, 10, $equipo_data['nombre_equipo'], 1, 0, 'C');
+            $pdf->SetFont("Arial", "BI", 11);
+            $pdf->Cell(45, 10, mb_convert_encoding('MARCA', "ISO-8859-1", "UTF-8"), 1, 0, 'C');
+            $pdf->SetFont("Arial", "", 11);
+            $pdf->Cell(50, 10, $equipo_data['marca_equipo'], 1, 1, 'C');
+
+            $pdf->SetFont("Arial", "BI", 11);
+            $pdf->Cell(35, 10, mb_convert_encoding('CÓDIGO EQUIPO', "ISO-8859-1", "UTF-8"), 1, 0, 'C');
+            $pdf->SetFont("Arial", "", 11);
+            $pdf->Cell(30, 10, $equipo_data['cod_equipo'], 1, 0, 'C');
+            $pdf->SetFont("Arial", "BI", 11);
+            $pdf->Cell(25, 10, mb_convert_encoding('SERIAL', "ISO-8859-1", "UTF-8"), 1, 0, 'C');
+            $pdf->SetFont("Arial", "", 11);
+            $pdf->Cell(37.5, 10, $equipo_data['serial_equipo'], 1, 0, 'C');
+            $pdf->SetFont("Arial", "BI", 11);
+            $pdf->Cell(25, 10, mb_convert_encoding('MODELO', "ISO-8859-1", "UTF-8"), 1, 0, 'C');
+            $pdf->SetFont("Arial", "", 11);
+            $pdf->Cell(37.5, 10, $equipo_data['modelo_equipo'], 1, 1, 'C');
+
+            $pdf->Ln(5);
+            $pdf->SetFont("Arial", "B", 11);
+            $pdf->Cell(0, 10, 'MOTIVO DE BAJA', 1, 1, 'C');
+
+            $motivos = [
+                mb_convert_encoding('Mal estado', "ISO-8859-1", "UTF-8"),
+                mb_convert_encoding('Siniestro', "ISO-8859-1", "UTF-8"),
+                mb_convert_encoding('Mal uso', "ISO-8859-1", "UTF-8"),
+                mb_convert_encoding('Perdida o hurto', "ISO-8859-1", "UTF-8"),
+                mb_convert_encoding('Daño eléctrico / electrónico', "ISO-8859-1", "UTF-8"),
+                mb_convert_encoding('Deterioro', "ISO-8859-1", "UTF-8"),
+                mb_convert_encoding('Obsoleto', "ISO-8859-1", "UTF-8"),
+                mb_convert_encoding('Otro', "ISO-8859-1", "UTF-8")
+            ];
+
+            for ($i = 0; $i < count($motivos); $i += 2) {
+                $motivo_1 = $motivos[$i];
+                $motivo_2 = $motivos[$i + 1];
+
+                $marca_1 = ($equipo_data['motivo_baja'] === $motivo_1) ? 'X' : '';
+                $marca_2 = ($equipo_data['motivo_baja'] === $motivo_2) ? 'X' : '';
+
+                $pdf->SetFont("Arial", "I", 11);
+                $pdf->Cell(80, 10, $motivo_1, 1, 0, 'C');
+                $pdf->SetFont("Arial", "", 11);
+                $pdf->Cell(15, 10, $marca_1, 1, 0, 'C');
+                $pdf->SetFont("Arial", "I", 11);
+                $pdf->Cell(80, 10, $motivo_2, 1, 0, 'C');
+                $pdf->SetFont("Arial", "", 11);
+                $pdf->Cell(15, 10, $marca_2, 1, 1, 'C');
+            }
+
+            $pdf->Ln(5);
+            $pdf->SetFont("Arial", "B", 11);
+            $pdf->Cell(0, 10, mb_convert_encoding('DETALLE DE CONCEPTO TÉCNICO', "ISO-8859-1", "UTF-8"), 1, 1, 'C');
+            if ($equipo_data['motivo_baja'] === 'Otro') {
+                $pdf->SetFont("Arial", "", 11);
+                $pdf->MultiCell(0, 8, mb_convert_encoding('Otro Motivo:', "ISO-8859-1", "UTF-8") . ' ' . $equipo_data['otro_motivo_baja'], 1);
+                $pdf->MultiCell(0, 8, $equipo_data['concepto_tecnico_baja'], 1);
+            } else {
+                $pdf->SetFont("Arial", "", 11);
+                $pdf->MultiCell(0, 8, $equipo_data['concepto_tecnico_baja'], 1);
+            }
+            
+
+            $pdf->Ln(10);
+            $pdf->SetFont("Arial", "B", 11);
+
+            $pdf->Ln(20);
+            $pdf->Cell(95, 10, "_________________________", 0, 0, 'C');
+            $pdf->Cell(95, 10, "_________________________", 0, 1, 'C');
+            $pdf->Cell(95, 6, mb_convert_encoding("Líder Responsable del Proceso","ISO-8859-1","UTF-8"), 0, 0, 'C');
+            $pdf->Cell(95, 6, mb_convert_encoding("Responsable de revisión técnica","ISO-8859-1","UTF-8"), 0, 1, 'C');
+
+            $nombre_archivo = 'acta_baja_equipo_' . $equipo_data['cod_equipo'] . '.pdf';
+            $pdf->Output('I', $nombre_archivo);
+
+            echo json_encode([
+                'status' => true,
+                'message' => '✅ Acta de baja generada correctamente',
+                'data' => $equipo_data
+            ]);
+        } catch (Exception $e) {
+            echo json_encode([
+                'status' => false,
+                'message' => '❌ ' . $e->getMessage()
             ]);
         }
         break;

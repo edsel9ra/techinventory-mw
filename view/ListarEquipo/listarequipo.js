@@ -3,7 +3,7 @@ let equipos = [];
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const estadoParam = params.get('estado')?.toLowerCase() || '';
-    
+
     fetch('../../controllers/equipo.php?op=listar')
         .then(res => res.json())
         .then(data => {
@@ -67,7 +67,7 @@ function initSelects(data) {
     });
 }
 
-function renderTablaConDataTable(data, estadoInicial='') {
+function renderTablaConDataTable(data, estadoInicial = '') {
     const table = $('#tablaEquipos').DataTable({
         data: data,
         destroy: true,
@@ -102,28 +102,34 @@ function renderTablaConDataTable(data, estadoInicial='') {
                         <button onclick="hojaVida('${equipo_id}')" class="btn btn-sm btn-info me-1" title="Información del equipo">
                             <i class="bi bi-info-circle-fill"></i>
                         </button>`;
-                        if (estado !== 'baja') {
-                            if(rol_id == 1 || rol_id == 2){
+                    if (estado === 'baja') {
+                        botones += `
+                        <button onclick="actaBaja('${equipo_id}')" class="btn btn-sm btn-dark" title="Generar acta de baja">
+                            <i class="bi bi-file-earmark-pdf-fill"></i>
+                        </button>`;
+                    } else {
+                        if (rol_id == 1 || rol_id == 2) {
                             botones += `
-                            <button onclick="registrarMmto('${equipo_id}')" class="btn btn-sm btn-primary" ${disabled} title="${disabled ? 'Equipo dado de baja' : 'Registrar mantenimiento'}">
-                                <i class="bi bi-pencil-square"></i>
+                            <button onclick="registrarMmto('${equipo_id}')" class="btn btn-sm btn-primary" title="Registrar mantenimiento">
+                                <i class="bi bi-tools"></i>
                             </button>`;
-                            }
-
-                            if (rol_id == 1 || rol_id == 3) {
-                                botones += `
-                                <button onclick="actaEntrega('${equipo_id}')" class="btn btn-sm btn-danger" ${disabled} title="${disabled ? 'Equipo dado de baja' : 'Generar acta de entrega'}">
-                                    <i class="bi bi-file-earmark-pdf-fill"></i>
-                                </button>`;
-                            }
                         }
-                        return botones;
+
+                        if (rol_id == 1 || rol_id == 3) {
+                            botones += `
+                            <button onclick="actaEntrega('${equipo_id}')" class="btn btn-sm btn-danger" title="Generar acta de entrega">
+                                <i class="bi bi-file-earmark-pdf-fill"></i>
+                            </button>`;
+                        }
+                    }
+
+                    return botones;
                 }
             }
         ],
         dom: "<'row mb-3'<'col-md-6 d-flex align-items-center'B><'col-md-6'f>>" +
-         "<'row'<'col-12'tr>>" +
-         "<'row mt-3'<'col-md-6'i><'col-md-6'p>>",
+            "<'row'<'col-12'tr>>" +
+            "<'row mt-3'<'col-md-6'i><'col-md-6'p>>",
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -157,8 +163,8 @@ function renderTablaConDataTable(data, estadoInicial='') {
                 const sede = rowData[0].toLowerCase();
 
                 return (!tipoFiltro || tipo === tipoFiltro) &&
-                       (!estadoFiltro || estado === estadoFiltro) &&
-                       (!sedeFiltro || sede === sedeFiltro);
+                    (!estadoFiltro || estado === estadoFiltro) &&
+                    (!sedeFiltro || sede === sedeFiltro);
             });
             table.draw();
             verificarFiltrosActivos();
@@ -177,6 +183,10 @@ function registrarMmto(equipo_id) {
 
 function actaEntrega(equipo_id) {
     window.open(`../../controllers/equipo.php?op=acta_entrega_pdf&equipo_id=${equipo_id}`, '_blank');
+}
+
+function actaBaja(equipo_id) {
+    window.open(`../../controllers/equipo.php?op=acta_baja_pdf&equipo_id=${equipo_id}`, '_blank');
 }
 
 document.getElementById('btnLimpiarFiltros').addEventListener('click', () => {

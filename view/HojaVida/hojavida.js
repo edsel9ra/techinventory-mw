@@ -113,6 +113,8 @@ function mostrarDetalle(equipo) {
                                     <li class="list-group-item card-text"><strong>Responsable:</strong> ${equipo.responsable}</li>
                                     <li class="list-group-item card-text"><strong>Fecha Registro:</strong> ${fechaFormateadaRegistro}</li>
                                     <li class="list-group-item card-text"><strong>Fecha Baja:</strong> ${equipo.fecha_baja ? fechaFormateadaBaja : 'N/A'}</li>
+                                    <li class="list-group-item card-text"><strong>Motivo Baja:</strong> ${equipo.motivo_baja === 'Otro' ? (equipo.otro_motivo_baja || 'Otro') : equipo.motivo_baja || 'N/A'}</li>
+                                    <li class="list-group-item card-text"><strong>Concepto Técnico:</strong> ${equipo.concepto_tecnico_baja || 'N/A'}</li>
                                 </ul>
                             </div>
                         </div>
@@ -443,6 +445,8 @@ function mostrarInformacionCompleta() {
                                     <li class="list-group-item"><strong>Responsable:</strong> ${equipo.responsable}</li>
                                     <li class="list-group-item"><strong>Fecha Registro:</strong> ${new Date(equipo.fecha_registro).toLocaleDateString('es-CO')}</li>
                                     <li class="list-group-item"><strong>Fecha Baja:</strong> ${equipo.fecha_baja ? new Date(equipo.fecha_baja).toLocaleDateString('es-CO') : 'N/A'}</li>
+                                    <li class="list-group-item"><strong>Motivo Baja:</strong> ${equipo.motivo_baja === 'Otro' ? (equipo.otro_motivo_baja || 'Otro') : equipo.motivo_baja || 'N/A'}</li>
+                                    <li class="list-group-item"><strong>Concepto Técnico:</strong> ${equipo.concepto_tecnico_baja || 'N/A'}</li>
                                 </ul>
                             </div>
                             <div class="col-md-6">
@@ -535,7 +539,7 @@ function cargarGaleriaEquipo(equipoId) {
                     });
                 });
             } else {
-                galeria.innerHTML = '<div class="col-12 text-center text-muted">No hay imágenes cargadas para este equipo. Seleccione las imágenes y subalas desde el botón "Subir".</div>';
+                galeria.innerHTML = '<div class="col-12 text-center text-muted">No hay imágenes cargadas para este equipo. Seleccione las imágenes y subalas desde el botón "Subir". Los equipos que estan en estado "Baja" se deshabilita la función.</div>';
             }
         })
         .catch(err => {

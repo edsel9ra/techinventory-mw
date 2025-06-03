@@ -475,7 +475,11 @@ class Equipo extends Conectar
                     sede_id = ?, 
                     estado = ?, 
                     responsable = ?,
-                    fecha_baja = ?
+                    fecha_baja = ?,
+                    proceso_baja = ?,
+                    motivo_baja = ?,
+                    otro_motivo_baja = ?,
+                    concepto_tecnico_baja = ?
                     WHERE equipo_id = ?
                 ");
                 $stmt->execute([
@@ -483,6 +487,10 @@ class Equipo extends Conectar
                     $estadoNuevo,
                     $datos['responsable'],
                     $fechaBaja,
+                    $datos['proceso_baja'] ?? null,
+                    $datos['motivo_baja'] ?? null,
+                    $datos['otro_motivo_baja'] ?? null,
+                    $datos['concepto_tecnico_baja'] ?? null,
                     $equipo_id
                 ]);
             } else {
@@ -508,8 +516,8 @@ class Equipo extends Conectar
                 case 1:
                     $this->updateDetalleComputador($conectar, $datos['detalles'], $detalleId);
                     break;
+                // Cuando es tipo 2, no se actualiza el monitor, pero si se actualiza el estado, la sede y el responsable del monitor si es necesario
                 case 2:
-                    $this->updateDetalleMonitor($conectar, $datos['detalles'], $detalleId);
                     break;
                 case 3:
                     $this->updateDetalleImpresora($conectar, $datos['detalles'], $detalleId);
@@ -597,17 +605,19 @@ class Equipo extends Conectar
         }
     }
 
-    private function updateDetalleMonitor($conectar, $detalles, $detalle_equipo_id)
+    /*private function updateDetalleMonitor($conectar, $detalles, $detalle_equipo_id)
     {
+        $tamanio_pulgadas = $detalles['tamanio_pulgadas'];
+
         $stmt = $conectar->prepare("UPDATE tbl_monitores SET 
             tamanio_pulgadas = ? 
             WHERE monitor_id = ?");
 
         $stmt->execute([
-            $detalles['tamanio_pulgadas'],
+            $tamanio_pulgadas,
             $detalle_equipo_id
         ]);
-    }
+    }*/
 
     private function updateDetalleImpresora($conectar, $detalles, $detalle_equipo_id)
     {
