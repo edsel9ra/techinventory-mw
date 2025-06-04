@@ -33,7 +33,7 @@ function comboRoles(selectId, selectedRolId = null) {
     const select = document.getElementById(selectId);
     if (!select) return;
 
-    select.innerHTML = '<option value="">Seleccione un rol</option>';
+    select.innerHTML = '<option value="" disabled selected >Seleccione un rol</option>';
     rolesCache.forEach(rol => {
         const option = document.createElement('option');
         option.value = rol.rol_id;

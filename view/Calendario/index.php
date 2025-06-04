@@ -25,8 +25,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
     <div class="main-content mt-3 mb-3">
         <div class="p-4 bg-white shadow rounded">
             <div class="row">
-                <div class="col">
-                    <h2 class="mb-3">Calendario</h2>
+                <div class="col d-flex align-items-center justify-content-center mb-3">
+                    <h2>Calendario - Creador de Eventos</h2>
                 </div>
                 <!--<div class="col-auto d-flex align-items-center gap-1">
                     <button id="btnRegresar"
@@ -42,7 +42,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1) {
                     <div class="p-3 border rounded bg-light shadow-sm h-20">
                         <p class="fw-bold mb-3 text-center">Eventos Predefinidos</p>
                         <div id='external-events' class="wrap">
-                            <div class="fc-event p-2 rounded bg-primary text-white border shadow-sm" data-title="Visita Programada" data-color="#f39c12">Visita Programada</div>
+                            <div class="fc-event p-2 rounded bg-primary text-white border shadow-sm" data-title="Visita Programada" data-color="#3788d8">Visita Programada</div>
                             <div class="fc-event p-2 rounded bg-success text-white border shadow-sm" data-title="Mantenimiento Preventivo" data-color="#28a745">Mantenimiento Preventivo</div>
                         </div>
                         <!--<div class="form-check mt-3">

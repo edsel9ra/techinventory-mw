@@ -62,6 +62,10 @@ class Equipo extends Conectar
                     $detalle_equipo_id = $this->insertDetalleTablet($conectar, $detalles);
                     break;
 
+                case 5:
+                    $detalle_equipo_id = $this->insertDetalleDispositivoRed($conectar, $detalles);
+                    break;
+
                 default:
                     throw new Exception("Tipo de equipo no reconocido: $tipo");
             }
@@ -228,6 +232,28 @@ class Equipo extends Conectar
         return $conectar->lastInsertId();
     }
 
+    private function insertDetalleDispositivoRed($conectar, $detalles)
+    {
+        if (
+            !isset(
+            $detalles['tipo_dispositivo'],
+            $detalles['ip_address'],
+            $detalles['mac_address'],
+            $detalles['ubicacion']
+        )
+        ) {
+            throw new Exception("Faltan datos del dispositivo.");
+        }
+        $stmt = $conectar->prepare("INSERT INTO tbl_dispositivos_red (tipo_dispositivo, ip_address, mac_address, ubicacion) VALUES (?, ?, ?, ?)");
+        $stmt->execute([
+            $detalles['tipo_dispositivo'],
+            $detalles['ip_address'],
+            $detalles['mac_address'],
+            $detalles['ubicacion']
+        ]);
+        return $conectar->lastInsertId();
+    }
+
     /** 
      * Se agregan otros tipos de equipos
      */
@@ -364,6 +390,16 @@ class Equipo extends Conectar
                     $detalle = $stmt->fetch(PDO::FETCH_ASSOC);
                     break;
 
+                case 5:
+                    $stmt = $conectar->prepare("
+                    SELECT * 
+                    FROM tbl_dispositivos_red 
+                    WHERE dispositivo_id = ?
+                ");
+                    $stmt->execute([$equipo['detalle_equipo_id']]);
+                    $detalle = $stmt->fetch(PDO::FETCH_ASSOC);
+                    break;
+
                 default:
                     throw new Exception("Tipo de equipo no reconocido: " . intval($equipo['tipo_equipo_id']));
             }
@@ -421,6 +457,9 @@ class Equipo extends Conectar
                     break;
                 case 4:
                     $stmt = $conectar->prepare("SELECT * FROM tbl_tablets WHERE tablet_id = ?");
+                    break;
+                case 5:
+                    $stmt = $conectar->prepare("SELECT * FROM tbl_dispositivos_red WHERE dispositivo_id = ?");
                     break;
                 default:
                     throw new Exception("Tipo de equipo no reconocido: " . intval($tipo_equipo_id));
@@ -525,6 +564,9 @@ class Equipo extends Conectar
                 case 4:
                     $this->updateDetalleTablet($conectar, $datos['detalles'], $detalleId);
                     break;
+                case 5:
+                    $this->updateDetalleDispositivoRed($conectar, $datos['detalles'], $detalleId);
+                    break;
                 default:
                     throw new Exception("Tipo de equipo no reconocido: " . intval($tipoEquipo));
             }
@@ -605,20 +647,6 @@ class Equipo extends Conectar
         }
     }
 
-    /*private function updateDetalleMonitor($conectar, $detalles, $detalle_equipo_id)
-    {
-        $tamanio_pulgadas = $detalles['tamanio_pulgadas'];
-
-        $stmt = $conectar->prepare("UPDATE tbl_monitores SET 
-            tamanio_pulgadas = ? 
-            WHERE monitor_id = ?");
-
-        $stmt->execute([
-            $tamanio_pulgadas,
-            $detalle_equipo_id
-        ]);
-    }*/
-
     private function updateDetalleImpresora($conectar, $detalles, $detalle_equipo_id)
     {
         $stmt = $conectar->prepare("UPDATE tbl_impresoras SET 
@@ -641,6 +669,24 @@ class Equipo extends Conectar
         $stmt->execute([
             $detalles['os'],
             $detalles['version_os'],
+            $detalle_equipo_id
+        ]);
+    }
+
+    private function updateDetalleDispositivoRed($conectar, $detalles, $detalle_equipo_id)
+    {
+        $stmt = $conectar->prepare("UPDATE tbl_dispositivos_red SET 
+            tipo_dispositivo = ?, 
+            ip_address = ?, 
+            mac_address = ?, 
+            ubicacion = ? 
+            WHERE dispositivo_id = ?");
+
+        $stmt->execute([
+           $detalles['tipo_dispositivo'],
+            $detalles['ip_address'],
+            $detalles['mac_address'],
+            $detalles['ubicacion'],
             $detalle_equipo_id
         ]);
     }
@@ -830,6 +876,23 @@ class Equipo extends Conectar
             return true;
         } catch (Exception $e) {
             throw new Exception("Error al eliminar la imagen del equipo: " . $e->getMessage());
+        }
+    }
+
+    public function listarEquiposSedes($sede_id)
+    {
+        try {
+            $conectar = parent::conexion();
+            $stmt = $conectar->prepare("SELECT e.*, s.nombre_sede, te.nombre_equipo 
+                FROM tbl_equipos e 
+                JOIN tbl_sedes s ON e.sede_id = s.sede_id 
+                JOIN tbl_tipos_equipos te ON e.tipo_equipo_id = te.tipo_equipo_id 
+                WHERE e.sede_id = ? AND e.estado != 'Baja'");
+            $stmt->execute([$sede_id]);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        } catch (Exception $e) {
+            throw new Exception("Error al obtener los equipos por sede: " . $e->getMessage());
         }
     }
 }

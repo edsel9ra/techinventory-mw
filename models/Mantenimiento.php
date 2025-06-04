@@ -89,12 +89,12 @@ class Mantenimiento extends Conectar
         }
     }
 
-    public function mantenimientosPorTecnico()
+    public function mantenimientosPorTecnico($mes, $anio)
     {
         try{
             $conectar = parent::conexion();
-            $stmt = $conectar->prepare("SELECT tecnico, tipo, COUNT(*) AS total FROM tbl_mantenimientos WHERE MONTH(fecha_realizado) = MONTH(CURRENT_DATE()) AND YEAR(fecha_realizado) = YEAR(CURRENT_DATE()) GROUP BY tecnico, tipo ORDER BY tecnico, tipo");
-            $stmt->execute();
+            $stmt = $conectar->prepare("SELECT tecnico, tipo, COUNT(*) AS total FROM tbl_mantenimientos WHERE MONTH(fecha_realizado) = ? AND YEAR(fecha_realizado) = ? GROUP BY tecnico, tipo ORDER BY tecnico, tipo");
+            $stmt->execute([$mes, $anio]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }catch(Exception $e){
             throw new Exception("Error al obtener el total de mantenimientos por tecnico: " . $e->getMessage());

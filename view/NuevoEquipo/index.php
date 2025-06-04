@@ -85,7 +85,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1 && $_SESSION['rol_i
                                 <option value="" disabled selected>Seleccione</option>
                                 <option value="Activo">Activo</option>
                                 <option value="Inactivo">Inactivo</option>
-                                <option value="Baja">Dado de Baja</option>
                             </select>
                         </div>
                     </div>
@@ -96,7 +95,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1 && $_SESSION['rol_i
                         </div>
                     </div>
                 </div>
-                <div class="main-content" id="campos_detalles"></div>
+                <div class="container" id="campos_detalles"></div>
             </form>
         </div>
     </section>

@@ -44,7 +44,7 @@ if ($equipo_id) {
             <form id="formEditarEquipo" method="POST">
                 <div class="row">
                     <div class="col">
-                        <h2 class="mb-3">Editar Equipo
+                        <h2 class="col d-flex align-items-center justify-content-center mb-3">Editar Equipo
                             <?php echo htmlspecialchars($detalle_equipo['cod_equipo'] ?? ''); ?>
                         </h2>
                     </div>
@@ -109,7 +109,7 @@ if ($equipo_id) {
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Proceso:</label>
+                            <label class="form-label fw-bold">Proceso / Área</label>
                             <input type="text" class="form-control" name="proceso_baja" required />
                         </div>
                         <div class="mb-3">

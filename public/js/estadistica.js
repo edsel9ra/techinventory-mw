@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
     const selectAnio = document.getElementById('filtroAnio');
+    const selectMes = document.getElementById('filtroMes');
     const tipoSelect = document.getElementById('filtroTipoMnto');
     const filtrosContainer = document.getElementById('filtrosMntos');
     const anioActual = new Date().getFullYear();
+    const mesActual = new Date().getMonth() + 1;
 
     // Generar opciones para los últimos 5 años
     if (rol_id === 1 || rol_id === 2) {
@@ -28,11 +30,27 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    if (rol_id === 1) {
+        // Generar opciones para meses
+        const mesesNombres = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+            'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        for (let i = 1; i <= 12; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = mesesNombres[i - 1];
+            if (i === mesActual) option.selected = true;
+            selectMes.appendChild(option);
+        }
+
+        selectMes.addEventListener('change', actualizarGraficoTecnico);
+        selectAnio.addEventListener('change', actualizarGraficoTecnico);
+        graficoMntosPorTecnico(mesActual, anioActual);
+    }
+
     if (rol_id === 1 || rol_id === 2) {
         contarMntosTotal();
         contarMntosPreventivos();
         contarMntosCorrectivos();
-        graficoMntosPorTecnico();
     }
 
     if (rol_id === 1 || rol_id === 3) {
@@ -50,6 +68,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const anio = selectAnio.value;
         const tipo = tipoSelect.value;
         graficarMntosPorMes(anio, tipo);
+    }
+
+    function actualizarGraficoTecnico() {
+        const mes = selectMes.value;
+        const anio = selectAnio.value;
+        graficoMntosPorTecnico(mes, anio);
     }
 });
 
@@ -369,14 +393,13 @@ function graficarMntosPorMes(anio, tipo = '') {
         });
 }
 
-function graficoMntosPorTecnico() {
-    fetch('../controllers/mantenimiento.php?op=mantenimientos_por_tecnico')
+function graficoMntosPorTecnico(mes, anio) {
+    fetch(`../controllers/mantenimiento.php?op=mantenimientos_por_tecnico&mes=${mes}&anio=${anio}`)
         .then(res => res.json())
         .then(data => {
             if (!data.status) return;
 
             const raw = data.data;
-
             const tecnicos = [...new Set(raw.map(r => r.tecnico))];
             const preventivos = tecnicos.map(tecnico => {
                 const item = raw.find(r => r.tecnico === tecnico && r.tipo === 'Preventivo');
@@ -388,7 +411,10 @@ function graficoMntosPorTecnico() {
             });
 
             const ctx = document.getElementById('graficoMntosPorTecnico').getContext('2d');
-            new Chart(ctx, {
+            if (window.mntoChart) window.mntoChart.destroy();
+
+            const mesNombre = document.querySelector(`#filtroMes option[value="${mes}"]`)?.textContent || `Mes ${mes}`;
+            window.mntoChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: tecnicos,
@@ -414,7 +440,7 @@ function graficoMntosPorTecnico() {
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Mantenimientos por técnico (mes actual)'
+                            text: `Mantenimientos por técnico - ${mesNombre} ${anio}`
                         }
                     },
                     scales: {
@@ -428,5 +454,4 @@ function graficoMntosPorTecnico() {
                 }
             });
         });
-
 }

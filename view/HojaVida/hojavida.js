@@ -148,7 +148,9 @@ function mostrarDetalle(equipo) {
                                     <li class="list-group-item"><strong>Monitor Asociado (Código - Activo Fijo):</strong> ${detalle.monitor.cod_equipo}</li>
                                     <li class="list-group-item"><strong>Tamaño:</strong> ${detalle.monitor.pulgadas} pulgadas</li>`;
             }
-            detalleHtml += `</ul>
+            detalleHtml += `
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -168,7 +170,8 @@ function mostrarDetalle(equipo) {
                                     <li class="list-group-item"><strong>Tamaño:</strong> ${detalle.tamanio_pulgadas}</li>
                                     <li class="list-group-item"><strong>Asignado Computador (Si/No):</strong> ${opcionesMonitor[detalle.asignado]}</li>
                                     <li class="list-group-item"><strong>Nombre Equipo Asignado:</strong> ${detalle.nombre_equipo_asignado || 'Sin equipo asignado'} </li>
-                            </ul>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -188,6 +191,7 @@ function mostrarDetalle(equipo) {
                                     <li class="list-group-item"><strong>Tecnología:</strong> ${detalle.tecnologia}</li>
                                     <li class="list-group-item"><strong>Conectividad:</strong> ${detalle.conexion}</li>
                                 </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -207,9 +211,32 @@ function mostrarDetalle(equipo) {
                                     <li class="list-group-item"><strong>Procesador:</strong> ${detalle.procesador}</li>
                                     <li class="list-group-item"><strong>RAM:</strong> ${detalle.ram} GB</li>
                                     <li class="list-group-item"><strong>Almacenamiento:</strong> ${detalle.rom} GB</li>
-                                <li class="list-group-item"><strong>Sistema Operativo:</strong> ${detalle.os}</li>
-                                <li class="list-group-item"><strong>Versión OS:</strong> ${detalle.version_os}</li>
-                            </ul>
+                                    <li class="list-group-item"><strong>Sistema Operativo:</strong> ${detalle.os}</li>
+                                    <li class="list-group-item"><strong>Versión OS:</strong> ${detalle.version_os}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+            break;
+
+        case 'Dispositivo de Red':
+            detalleHtml += `
+                <div class="col-md-6">
+                    <div class="collapse multi-collapse" id="multiCollapseDetallesEquipo">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title fw-bold">Características Específicas</h5>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group">
+                                    <li class="list-group-item"><strong>Dispositivo:</strong> ${detalle.tipo_dispositivo}</li>
+                                    <li class="list-group-item"><strong>Dirección IP:</strong> ${detalle.ip_address} GB</li>
+                                    <li class="list-group-item"><strong>Dirección MAC:</strong> ${detalle.mac_address} GB</li>
+                                    <li class="list-group-item"><strong>Ubicación:</strong> ${detalle.ubicacion}</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -279,65 +306,59 @@ function mostrarDetalle(equipo) {
         'fadeDuration': 300,
         'imageFadeDuration': 300
     });
-    
+
     cargarGaleriaEquipo(equipoId);
     configurarSubidaImagen(equipoId);
-}
 
-// Cargar historial de mantenimientos
-document.addEventListener('DOMContentLoaded', () => {
-    const equipoId = new URLSearchParams(window.location.search).get('equipo_id');
+    // Cargar historial de mantenimientos
+    const historialContainer = document.getElementById('historialMmtos');
+    const tipo = equipo.nombre_equipo?.toLowerCase();
+    const mostrarHistorial = ['computador', 'impresora', 'tablet'];
 
-    if (equipoId) {
-        // Cargar el historial de mantenimientos
-        fetch(`../../controllers/mantenimiento.php?op=listar_mmto_equipo&equipo_id=${equipoId}`)
+    if (mostrarHistorial.includes(tipo)) {
+        fetch(`../../controllers/mantenimiento.php?op=listar_mmto_equipo&equipo_id=${equipo.equipo_id}`)
             .then(response => response.json())
             .then(data => {
-                if (data.length > 0) {
-                    const historialContainer = document.getElementById('historialMmtos');
-                    historialContainer.innerHTML = '<h3>Historial de Mantenimientos</h3>'; // Limpiar el contenedor
+                historialContainer.innerHTML = '<h3>Historial de Mantenimientos</h3>';
 
+                if (data.length > 0) {
                     data.forEach((mmto, index) => {
-                        const isFirst = index === 0 ? 'show' : ''; // Mostrar el primer mantenimiento expandido
+                        const isFirst = index === 0 ? 'show' : '';
                         const mmtoHtml = `
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="heading${mmto.mantenimiento_id}">
-                                    <button class="accordion-button ${isFirst ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${mmto.mantenimiento_id}" aria-expanded="${isFirst ? 'true' : 'false'}" aria-controls="collapse${mmto.mantenimiento_id}">
-                                        Mantenimiento Realizado (Fecha): ${mmto.fecha_realizado}
-                                    </button>
-                                </h2>
-                                <div id="collapse${mmto.mantenimiento_id}" class="accordion-collapse collapse ${isFirst}" aria-labelledby="heading${mmto.mantenimiento_id}" data-bs-parent="#historialMmtos">
-                                    <div class="accordion-body">
-                                        <ul class="list-group">
-                                            <li class="list-group-item"><strong>Tipo de Mantenimiento:</strong> ${mmto.tipo}</li>
-                                            <li class="list-group-item"><strong>Descripción:</strong> ${mmto.descripcion}</li>
-                                            <li class="list-group-item"><strong>Acciones Realizadas:</strong> ${mmto.acciones_realizadas}</li>
-                                            <li class="list-group-item"><strong>Observaciones:</strong> ${mmto.observaciones}</li>
-                                            <li class="list-group-item"><strong>Responsable:</strong> ${mmto.tecnico}</li>
-                                            <li class="list-group-item"><strong>Revisado y Recibido por:</strong> ${mmto.revisado_por}</li>
-                                        </ul>
-                                    </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading${mmto.mantenimiento_id}">
+                                <button class="accordion-button ${isFirst ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${mmto.mantenimiento_id}" aria-expanded="${isFirst ? 'true' : 'false'}" aria-controls="collapse${mmto.mantenimiento_id}">
+                                    Mantenimiento Realizado (Fecha): ${mmto.fecha_realizado}
+                                </button>
+                            </h2>
+                            <div id="collapse${mmto.mantenimiento_id}" class="accordion-collapse collapse ${isFirst}" aria-labelledby="heading${mmto.mantenimiento_id}" data-bs-parent="#historialMmtos">
+                                <div class="accordion-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item"><strong>Tipo de Mantenimiento:</strong> ${mmto.tipo}</li>
+                                        <li class="list-group-item"><strong>Descripción:</strong> ${mmto.descripcion}</li>
+                                        <li class="list-group-item"><strong>Acciones Realizadas:</strong> ${mmto.acciones_realizadas}</li>
+                                        <li class="list-group-item"><strong>Observaciones:</strong> ${mmto.observaciones}</li>
+                                        <li class="list-group-item"><strong>Responsable:</strong> ${mmto.tecnico}</li>
+                                        <li class="list-group-item"><strong>Revisado y Recibido por:</strong> ${mmto.revisado_por}</li>
+                                    </ul>
                                 </div>
                             </div>
-                        `;
+                        </div>
+                    `;
                         historialContainer.innerHTML += mmtoHtml;
                     });
                 } else {
-                    document.getElementById('historialMmtos').innerHTML = '<h3>Historial de Mantenimientos</h3><p>No se encontraron mantenimientos registrados para este equipo. Por favor, registre un mantenimiento para habilitar esta sección.</p>';
+                    historialContainer.innerHTML += '<p>No se encontraron mantenimientos registrados para este equipo.</p>';
                 }
             })
             .catch(error => {
+                historialContainer.innerHTML = '<p>Error al cargar el historial.</p>';
                 Swal.fire('Error', error.message || 'Error al cargar el historial de mantenimientos', 'error');
-                document.getElementById('historialMmtos').innerHTML = '<h3>Historial de Mantenimientos</h3> <p>Error al cargar el historial de mantenimientos.</p>';
             });
     } else {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se proporcionó un ID de equipo.'
-        });
+        historialContainer.style.display = 'none'; // Ocultar si el tipo no aplica
     }
-});
+}
 
 // Editar equipo
 function editarEquipo(equipo_id) {
@@ -427,6 +448,16 @@ function mostrarInformacionCompleta() {
                                 <li class="list-group-item"><strong>Almacenamiento:</strong> ${detalle.rom} GB</li>
                                 <li class="list-group-item"><strong>Sistema Operativo:</strong> ${detalle.os}</li>
                                 <li class="list-group-item"><strong>Versión OS:</strong> ${detalle.version_os}</li>
+                            </ul>`;
+                            break;
+
+                        case 'Dispositivo de Red':
+                            detalleHtml += `
+                            <ul class="list-group">
+                                <li class="list-group-item"><strong>Dispositivo:</strong> ${detalle.tipo_dispositivo}</li>
+                                <li class="list-group-item"><strong>Dirección IP:</strong> ${detalle.ip_address}</li>
+                                <li class="list-group-item"><strong>Dirección MAC:</strong> ${detalle.mac_address}</li>
+                                <li class="list-group-item"><strong>Ubicación:</strong> ${detalle.ubicacion}</li>
                             </ul>`;
                             break;
                     }
@@ -539,7 +570,7 @@ function cargarGaleriaEquipo(equipoId) {
                     });
                 });
             } else {
-                galeria.innerHTML = '<div class="col-12 text-center text-muted">No hay imágenes cargadas para este equipo. Seleccione las imágenes y subalas desde el botón "Subir". Los equipos que estan en estado "Baja" se deshabilita la función.</div>';
+                galeria.innerHTML = '<div class="col-12 text-center text-muted">No hay imágenes cargadas para este equipo. Seleccione las imágenes y subalas desde el botón "Subir". Los equipos que estan en estado "Dado de Baja" se deshabilita la función.</div>';
             }
         })
         .catch(err => {

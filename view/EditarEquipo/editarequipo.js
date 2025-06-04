@@ -322,6 +322,36 @@ function cargarCamposEspecificos(tipo_equipo, detalles = {}) {
             `;
             break;
 
+        case "Dispositivo de Red":
+            detallesContainer.innerHTML = `
+                <div class="mb-3">
+                    <label for="tipo_dispositivo" class="form-label fw-bold">Tipo de Dispositivo:</label>
+                    <select id="tipo_dispositivo" name="detalles[tipo_dispositivo]" class="form-control" required>
+                        <option value="Router" ${detalles.tipo_dispositivo === 'Router' ? 'selected' : ''}>Router</option>
+                        <option value="Switch" ${detalles.tipo_dispositivo === 'Switch' ? 'selected' : ''}>Switch</option>
+                        <option value="Access Point" ${detalles.tipo_dispositivo === 'Access Point' ? 'selected' : ''}>Access Point</option>
+                        <option value="Modem" ${detalles.tipo_dispositivo === 'Modem' ? 'selected' : ''}>Modem</option>
+                        <option value="HUB" ${detalles.tipo_dispositivo === 'HUB' ? 'selected' : ''}>HUB</option>
+                        <option value="Repetidor" ${detalles.tipo_dispositivo === 'Repetidor' ? 'selected' : ''}>Repetidor</option>
+                        <option value="Bridge" ${detalles.tipo_dispositivo === 'Bridge' ? 'selected' : ''}>Bridge</option>
+                        <option value="Gateway" ${detalles.tipo_dispositivo === 'Gateway' ? 'selected' : ''}>Gateway</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="ip_address" class="form-label">Dirección IP:</label>
+                    <input type="text" id="ip_address" name="detalles[ip_address]" class="form-control" value="${detalles.ip_address || ''}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="mac_address" class="form-label">Dirección MAC:</label>
+                    <input type="text" id="mac_address" name="detalles[mac_address]" class="form-control" value="${detalles.mac_address || ''}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="ubicacion" class="form-label">Ubicación:</label>
+                    <input type="text" id="ubicacion" name="detalles[ubicacion]" class="form-control" value="${detalles.ubicacion || ''}" required>
+                </div>
+            `;
+            break;
+
         default:
             detallesContainer.innerHTML = '<p class="card-text">No se encontraron detalles específicos para editar este tipo de equipo.</p>';
             break;

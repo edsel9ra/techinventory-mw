@@ -144,7 +144,9 @@ switch ($_GET["op"]) {
     case 'mantenimientos_por_tecnico':
         verificarRol([1, 2]);
         try{
-            $resultado = $mantenimiento->mantenimientosPorTecnico();
+            $mes = isset($_GET['mes']) ? intval($_GET['mes']) : date('n'); // mes actual si no se envía
+            $anio = isset($_GET['anio']) ? intval($_GET['anio']) : date('Y');
+            $resultado = $mantenimiento->mantenimientosPorTecnico($mes, $anio);
             echo json_encode([
                 'status' => true,
                 'data' => $resultado

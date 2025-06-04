@@ -17,8 +17,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 2) {
     <?php require_once __DIR__ . '/../public/main/nav.php'; ?>
     <section class="main-content mt-3 mb-3">
         <div class="p-4 bg-white shadow rounded">
-            <div class="row mt-4 mb-4" id="resumenMntos">
-                <h2 class="text-center">Resumen de Mantenimientos</h2>
+            <div class="row mt-2 mb-2" id="resumenMntos">
+                <h1 class="text-center mb-4">Resumen de Mantenimientos</h1>
                 <div class="col-lg-4 col-6">
                     <div class="small-box text-bg-secondary">
                         <div class="inner">
@@ -54,7 +54,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 2) {
                 </div>
             </div>
             <div class="row mt-4 mb-4" id="mntosPorMes">
-                <h2 class="text-center">Mantenimientos por mes</h2>
+                <h2 class="text-center mb-4">Mantenimientos por mes</h2>
 
                 <div class="col-12 d-flex flex-column align-items-center">
                     <div class="d-flex justify-content-center gap-2">

@@ -3,8 +3,14 @@ let equipos = [];
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const estadoParam = params.get('estado')?.toLowerCase() || '';
+    const sedeParam = params.get('sede_id') || null;
 
-    fetch('../../controllers/equipo.php?op=listar')
+    const endpoint = sedeParam ? `../../controllers/equipo.php?op=listar_equipos_sede&sede_id=${sedeParam}` : '../../controllers/equipo.php?op=listar';
+
+    console.log('Sede param:', sedeParam);
+    console.log('Llamando a:', endpoint);
+
+    fetch(endpoint)
         .then(res => res.json())
         .then(data => {
             equipos = data.aaData;
@@ -93,6 +99,7 @@ function renderTablaConDataTable(data, estadoInicial = '') {
                 orderable: false,
                 searchable: false,
                 render: function (data, type, row) {
+                    const tipo_equipo = row[2].toLowerCase();
                     const estado = row[4].toLowerCase();
                     const equipo_id = row[5]; // ID viene como último valor
 
@@ -108,7 +115,7 @@ function renderTablaConDataTable(data, estadoInicial = '') {
                             <i class="bi bi-file-earmark-pdf-fill"></i>
                         </button>`;
                     } else {
-                        if (rol_id == 1 || rol_id == 2) {
+                        if ((rol_id == 1 || rol_id == 2) && (tipo_equipo === 'computador' || tipo_equipo === 'impresora' || tipo_equipo === 'tablet')) {
                             botones += `
                             <button onclick="registrarMmto('${equipo_id}')" class="btn btn-sm btn-primary" title="Registrar mantenimiento">
                                 <i class="bi bi-tools"></i>

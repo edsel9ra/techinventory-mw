@@ -9,6 +9,28 @@ require_once __DIR__ . '/../public/lib/fpdf/fpdf.php';
 $equipo = new Equipo();
 $usuario = new Usuario();
 
+function formatearEquiposDataTable($equipos)
+{
+    $data = [];
+    foreach ($equipos as $row) {
+        $sub_array = [];
+        $sub_array[] = $row['nombre_sede'];
+        $sub_array[] = $row['cod_equipo'];
+        $sub_array[] = $row['nombre_equipo'];
+        $sub_array[] = $row['serial_equipo'];
+        $sub_array[] = $row['estado']; // Estado texto plano
+        $sub_array[] = $row['equipo_id']; // Para usarlo en los botones
+        $data[] = $sub_array;
+    }
+    $results = [
+        "sEcho" => 1,
+        "iTotalRecords" => count($data),
+        "iTotalDisplayRecords" => count($data),
+        "aaData" => $data
+    ];
+    return $results;
+}
+
 switch ($_GET["op"]) {
 
     //Combo tipo equipo
@@ -147,28 +169,7 @@ switch ($_GET["op"]) {
     case 'listar':
         verificarRol([1, 2, 3]);
         $datos = $equipo->listarEquipos();
-        $data = [];
-
-        foreach ($datos as $row) {
-            $sub_array = [];
-            $sub_array[] = $row["nombre_sede"];
-            $sub_array[] = $row["cod_equipo"];
-            $sub_array[] = $row["nombre_equipo"];
-            $sub_array[] = $row["serial_equipo"];
-            $sub_array[] = $row["estado"];         // Estado texto plano
-            $sub_array[] = $row["equipo_id"];      // Para usarlo en los botones
-
-            $data[] = $sub_array;
-        }
-
-        $results = [
-            "sEcho" => 1,
-            "iTotalRecords" => count($data),
-            "iTotalDisplayRecords" => count($data),
-            "aaData" => $data
-        ];
-
-        echo json_encode($results);
+        echo json_encode(formatearEquiposDataTable($datos));
         break;
 
     //Listar Detalle de Equipo
@@ -714,7 +715,6 @@ switch ($_GET["op"]) {
             $pdf->SetFont("Arial", "", 11);
             $pdf->Cell(50, 10, mb_convert_encoding($equipo_data['responsable'], "ISO-8859-1", "UTF-8"), 1, 1, 'C');
 
-
             $pdf->Ln(5);
             $pdf->SetFont("Arial", "B", 11);
             $pdf->Cell(0, 10, mb_convert_encoding('DESCRIPCIÓN DE ELEMENTO / EQUIPO', "ISO-8859-1", "UTF-8"), 1, 1, 'C');
@@ -733,7 +733,7 @@ switch ($_GET["op"]) {
             $pdf->Cell(30, 10, $equipo_data['cod_equipo'], 1, 0, 'C');
             $pdf->SetFont("Arial", "BI", 11);
             $pdf->Cell(25, 10, mb_convert_encoding('SERIAL', "ISO-8859-1", "UTF-8"), 1, 0, 'C');
-            $pdf->SetFont("Arial", "", 11);
+            $pdf->SetFont("Arial", "", 10);
             $pdf->Cell(37.5, 10, $equipo_data['serial_equipo'], 1, 0, 'C');
             $pdf->SetFont("Arial", "BI", 11);
             $pdf->Cell(25, 10, mb_convert_encoding('MODELO', "ISO-8859-1", "UTF-8"), 1, 0, 'C');
@@ -759,8 +759,8 @@ switch ($_GET["op"]) {
                 $motivo_1 = $motivos[$i];
                 $motivo_2 = $motivos[$i + 1];
 
-                $marca_1 = ($equipo_data['motivo_baja'] === $motivo_1) ? 'X' : '';
-                $marca_2 = ($equipo_data['motivo_baja'] === $motivo_2) ? 'X' : '';
+                $marca_1 = (mb_convert_encoding($equipo_data['motivo_baja'],"ISO-8859-1","UTF-8") === $motivo_1) ? 'X' : '';
+                $marca_2 = (mb_convert_encoding($equipo_data['motivo_baja'],"ISO-8859-1","UTF-8") === $motivo_2) ? 'X' : '';
 
                 $pdf->SetFont("Arial", "I", 11);
                 $pdf->Cell(80, 10, $motivo_1, 1, 0, 'C');
@@ -783,7 +783,6 @@ switch ($_GET["op"]) {
                 $pdf->SetFont("Arial", "", 11);
                 $pdf->MultiCell(0, 8, $equipo_data['concepto_tecnico_baja'], 1);
             }
-            
 
             $pdf->Ln(10);
             $pdf->SetFont("Arial", "B", 11);
@@ -791,8 +790,8 @@ switch ($_GET["op"]) {
             $pdf->Ln(20);
             $pdf->Cell(95, 10, "_________________________", 0, 0, 'C');
             $pdf->Cell(95, 10, "_________________________", 0, 1, 'C');
-            $pdf->Cell(95, 6, mb_convert_encoding("Líder Responsable del Proceso","ISO-8859-1","UTF-8"), 0, 0, 'C');
-            $pdf->Cell(95, 6, mb_convert_encoding("Responsable de revisión técnica","ISO-8859-1","UTF-8"), 0, 1, 'C');
+            $pdf->Cell(95, 6, mb_convert_encoding("Líder Responsable del Proceso", "ISO-8859-1", "UTF-8"), 0, 0, 'C');
+            $pdf->Cell(95, 6, mb_convert_encoding("Responsable de revisión técnica", "ISO-8859-1", "UTF-8"), 0, 1, 'C');
 
             $nombre_archivo = 'acta_baja_equipo_' . $equipo_data['cod_equipo'] . '.pdf';
             $pdf->Output('I', $nombre_archivo);
@@ -806,6 +805,23 @@ switch ($_GET["op"]) {
             echo json_encode([
                 'status' => false,
                 'message' => '❌ ' . $e->getMessage()
+            ]);
+        }
+        break;
+
+    case 'listar_equipos_sede':
+        verificarRol([1, 2, 3]);
+        try {
+            if (!isset($_GET['sede_id'])) {
+                throw new Exception("❌ El ID de la sede no puede estar vacío.");
+            }
+            $sede_id = intval($_GET['sede_id']);
+            $datos = $equipo->listarEquiposSedes($sede_id);
+            echo json_encode(formatearEquiposDataTable($datos));
+        } catch (Exception $e) {
+            echo json_encode([
+                'status' => false,
+                'message' => $e->getMessage()
             ]);
         }
         break;

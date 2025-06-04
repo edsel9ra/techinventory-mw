@@ -29,7 +29,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 3) {
                         <div class="small-box-icon">
                             <ion-icon name="laptop"></ion-icon>
                         </div>
-                        <a href="ListarEquipo/index.php" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="ListarEquipo/" class="small-box-footer">Ver Equipos<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
@@ -41,7 +41,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 3) {
                         <div class="small-box-icon">
                             <ion-icon name="cloud-done"></ion-icon>
                         </div>
-                        <a href="ListarEquipo/index.php?estado=activo" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="ListarEquipo/?estado=activo" class="small-box-footer">Ver Activos<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
@@ -53,7 +53,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 3) {
                         <div class="small-box-icon">
                             <ion-icon name="warning"></ion-icon>
                         </div>
-                        <a href="ListarEquipo/index.php?estado=inactivo" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="ListarEquipo/?estado=inactivo" class="small-box-footer">Ver Inactivos<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
@@ -65,12 +65,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 3) {
                         <div class="small-box-icon">
                             <ion-icon name="trash-bin"></ion-icon>
                         </div>
-                        <a href="ListarEquipo/index.php?estado=baja" class="small-box-footer">Más información<i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="ListarEquipo/?estado=baja" class="small-box-footer">Ver Equipos de Baja<i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
             <div class="row mt-4 mb-4" id="equiposPorTipo">
-                <h2 class="text-center">Equipos por tipo</h2>
+                <h2 class="text-center">Equipos por estado/tipo</h2>
                 <div class="col-lg-4 col-6 d-flex justify-content-center">
                     <canvas id="graficoEquiposTipoActivos" width="400" height="250"></canvas>
                 </div>
@@ -95,9 +95,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 3) {
     <!-- JS Principal -->
     <?php require_once __DIR__ . '/../public/main/js.php'; ?>
     <script defer src="../public/js/estadistica.js"></script>
-    <script>
-        const rol_id = <?php echo $_SESSION['rol_id']; ?>;
-    </script>
 </body>
 
 </html>

@@ -94,6 +94,14 @@ CREATE TABLE tbl_tablets (
     version_os VARCHAR(50)
 );
 
+CREATE TABLE tbl_dispositivos_red (
+    dispositivo_id INT AUTO_INCREMENT PRIMARY KEY,
+    tipo_dispositivo ENUM('Router', 'Switch', 'Access Point', 'Modem', 'HUB', 'Repetidor', 'Bridge', 'Gateway') NOT NULL,
+    ip_address VARCHAR(15) NOT NULL,
+    mac_address VARCHAR(17) NOT NULL,
+    ubicacion VARCHAR(100)
+);
+
 CREATE TABLE tbl_mantenimientos (
     mantenimiento_id INT AUTO_INCREMENT PRIMARY KEY,
     equipo_id INT NOT NULL,
@@ -116,12 +124,9 @@ CREATE TABLE tbl_eventos_calendario (
     fecha_fin DATETIME DEFAULT NULL,
     all_day TINYINT(1) DEFAULT 1,
     color VARCHAR(20) DEFAULT '#3788d8',
-    
     sede_id INT DEFAULT NULL,
     activo TINYINT(1) DEFAULT 1,
-
     creado_por VARCHAR(100),
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
     FOREIGN KEY (sede_id) REFERENCES tbl_sedes(sede_id)
 );

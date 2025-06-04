@@ -266,6 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <option value="USB">USB</option>
                                 <option value="LAN">Cable de Red</option>
                                 <option value="WiFi">WiFi</option>
+                                <option value="Híbrido">Híbrido</option>
                             </select>
                         </div>
                     </div>
@@ -309,6 +310,50 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="input-group mb-3">
                             <label class="input-group-text fw-bold" for="version_os">Versión del Sistema Operativo</label>
                             <input type="text" class="form-control" name="version_os" id="version_os" required>
+                        </div>
+                    </div>
+                </div>
+                `;
+                break;
+
+            case "5":
+                contenedorDetalles.innerHTML = `
+                <h4 class="mb-3">Detalles del Dispositivo de Red</h4>
+                <div class="row g-3 align-items-center">
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <label class="input-group-text fw-bold" for="tipo_dispositivo">Tipo de Conexión</label>
+                            <select class="form-select" name="tipo_dispositivo" id="tipo_dispositivo" required>
+                                <option value="" disabled selected>Seleccione</option>
+                                <option value="Router">Router</option>
+                                <option value="Switch">Switch</option>
+                                <option value="Access Point">Access Point</option>
+                                <option value="Modem">Modem</option>
+                                <option value="HUB">HUB</option>
+                                <option value="Repetidor">Repetidor</option>
+                                <option value="Bridge">Bridge</option>
+                                <option value="Gateway">Gateway</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <label class="input-group-text fw-bold" for="os">Dirección IP</label>
+                            <input type="text" class="form-control" name="ip_address" id="ip_address" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3 align-items-center">
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <label class="input-group-text fw-bold" for="os">Dirección MAC</label>
+                            <input type="text" class="form-control" name="mac_address" id="mac_address" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <label class="input-group-text fw-bold" for="os">Ubicación</label>
+                            <input type="text" class="form-control" name="ubicacion" id="ubicacion" required>
                         </div>
                     </div>
                 </div>

@@ -1,8 +1,6 @@
 let sedesCache = [];
 const modal = new bootstrap.Modal(document.getElementById('modalEvento'));
 
-
-
 // Funciones de alerta
 function mostrarAlerta({ icon = 'info', title = '', text = '', timer = null }) {
   const config = { icon, title, text };
@@ -228,6 +226,13 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     //Mostrar descripción utilizando tippy
     eventDidMount: function (info) {
+      const now = new Date();
+      const eventoFin = info.event.end || info.event.start;
+      if (eventoFin < now) {
+        info.el.style.opacity = '0.4';
+        info.el.style.pointerEvents = 'none'; // bloquea clics también si quieres
+      }
+
       if (info.event.extendedProps.descripcion) {
         tippy(info.el, {
           content: info.event.extendedProps.descripcion,
