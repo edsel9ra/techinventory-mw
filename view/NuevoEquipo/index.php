@@ -78,7 +78,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1 && $_SESSION['rol_i
                     </div>
                 </div>
                 <div class="row g-3 align-items-center">
-                    <div class="col">
+                    <div class="col-4">
+                        <div class="input-group mb-3">
+                            <label class="input-group-text fw-bold" for="activo_anterior">Activo Fijo Anterior</label>
+                            <input type="text" class="form-control" name="activo_anterior" id="activo_anterior" required>
+                        </div>
+                    </div>
+                    <div class="col-4">
                         <div class="input-group mb-3">
                             <label class="input-group-text fw-bold" for="estado">Estado</label>
                             <select class="form-select" name="estado" id="estado" required>
@@ -88,7 +94,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['rol_id'] != 1 && $_SESSION['rol_i
                             </select>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col-4">
                         <div class="input-group mb-3">
                             <label class="input-group-text fw-bold" for="responsable">Responsable</label>
                             <input type="text" class="form-control" name="responsable" id="responsable" required>

@@ -32,6 +32,7 @@ CREATE TABLE tbl_equipos (
     sede_id INT,
     tipo_equipo_id INT,
     cod_equipo VARCHAR(20) UNIQUE,
+    activo_anterior VARCHAR(20) DEFAULT NULL,
     marca_equipo VARCHAR(100),
     modelo_equipo VARCHAR(100),
     serial_equipo VARCHAR(250),

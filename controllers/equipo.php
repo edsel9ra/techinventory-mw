@@ -16,6 +16,7 @@ function formatearEquiposDataTable($equipos)
         $sub_array = [];
         $sub_array[] = $row['nombre_sede'];
         $sub_array[] = $row['cod_equipo'];
+        $sub_array[] = $row['activo_anterior'];
         $sub_array[] = $row['nombre_equipo'];
         $sub_array[] = $row['serial_equipo'];
         $sub_array[] = $row['estado']; // Estado texto plano

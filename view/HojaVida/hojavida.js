@@ -108,6 +108,7 @@ function mostrarDetalle(equipo) {
                                     <li class="list-group-item card-text"><strong>Marca:</strong> ${equipo.marca_equipo}</li>
                                     <li class="list-group-item card-text"><strong>Modelo:</strong> ${equipo.modelo_equipo}</li>
                                     <li class="list-group-item card-text"><strong>Serial:</strong> ${equipo.serial_equipo}</li>
+                                    <li class="list-group-item card-text"><strong>Activo Fijo Anterior:</strong> ${equipo.activo_anterior || 'N/A'} </li>
                                     <li class="list-group-item card-text"><strong>Sede:</strong> ${equipo.nombre_sede}</li>
                                     <li class="list-group-item card-text"><strong>Estado:</strong> ${opcionesEstado[equipo.estado]}</li>
                                     <li class="list-group-item card-text"><strong>Responsable:</strong> ${equipo.responsable}</li>
@@ -471,6 +472,7 @@ function mostrarInformacionCompleta() {
                                     <li class="list-group-item"><strong>Marca:</strong> ${equipo.marca_equipo}</li>
                                     <li class="list-group-item"><strong>Modelo:</strong> ${equipo.modelo_equipo}</li>
                                     <li class="list-group-item"><strong>Serial:</strong> ${equipo.serial_equipo}</li>
+                                    <li class="list-group-item"><strong>Activo Fijo Anterior:</strong> ${equipo.activo_anterior || 'N/A'} </li>
                                     <li class="list-group-item"><strong>Sede:</strong> ${equipo.nombre_sede}</li>
                                     <li class="list-group-item"><strong>Estado:</strong> ${opcionesEstado[equipo.estado]}</li>
                                     <li class="list-group-item"><strong>Responsable:</strong> ${equipo.responsable}</li>

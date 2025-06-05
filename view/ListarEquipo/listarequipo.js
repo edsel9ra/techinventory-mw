@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initSelects(data) {
-    const tipos = [...new Set(data.map(e => e[2]))].sort();
+    const tipos = [...new Set(data.map(e => e[3]))].sort();
     const filtroTipo = document.getElementById('filtroTipo');
     tipos.forEach(tipo => {
         const option = document.createElement('option');
@@ -47,7 +47,7 @@ function initSelects(data) {
         Inactivo: 'Inactivo',
         Baja: 'Dado de Baja'
     };
-    const estados = [...new Set(data.map(e => e[4]))].sort();
+    const estados = [...new Set(data.map(e => e[5]))].sort();
     const filtroEstado = document.getElementById('filtroEstado');
     estados.forEach(estado => {
         const option = document.createElement('option');
@@ -80,11 +80,12 @@ function renderTablaConDataTable(data, estadoInicial = '') {
         columns: [
             { title: "Sede", data: 0 },
             { title: "Activo Fijo", data: 1 },
-            { title: "Tipo Equipo", data: 2 },
-            { title: "Serial", data: 3 },
+            { title: "Activo Anterior", data: 2 },
+            { title: "Tipo Equipo", data: 3 },
+            { title: "Serial", data: 4 },
             {
                 title: "Estado",
-                data: 4,
+                data: 5,
                 render: (data) => {
                     switch (data) {
                         case "Activo": return '<span class="badge rounded-pill bg-success">Activo</span>';
@@ -99,9 +100,9 @@ function renderTablaConDataTable(data, estadoInicial = '') {
                 orderable: false,
                 searchable: false,
                 render: function (data, type, row) {
-                    const tipo_equipo = row[2].toLowerCase();
-                    const estado = row[4].toLowerCase();
-                    const equipo_id = row[5]; // ID viene como último valor
+                    const tipo_equipo = row[3].toLowerCase();
+                    const estado = row[5].toLowerCase();
+                    const equipo_id = row[6]; // ID viene como último valor
 
                     const disabled = estado === 'baja' ? 'disabled' : '';
 
@@ -165,8 +166,8 @@ function renderTablaConDataTable(data, estadoInicial = '') {
                 const estadoFiltro = document.getElementById('filtroEstado').value.toLowerCase();
                 const sedeFiltro = document.getElementById('filtroSede').value.toLowerCase();
 
-                const tipo = rowData[2].toLowerCase();
-                const estado = rowData[4].toLowerCase();
+                const tipo = rowData[3].toLowerCase();
+                const estado = rowData[5].toLowerCase();
                 const sede = rowData[0].toLowerCase();
 
                 return (!tipoFiltro || tipo === tipoFiltro) &&
